@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Cricket Strike Rate Calculator</title>
+{% endblock %}
+
+{% block body %}
+    <div class="content">
+        <h1 style="text-align: center">Player Batting  Strike Rate</h1>
+        
+        <form action="{{ url_for('calculate') }}" method="post">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="runs-addon">Runs Made</span>
+                <input type="text" class="form-control" id="runs" name="runs" aria-describedby="-addon">
+            </div><br>
+            
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="balls-addon">Balls Faced</span>
+                <input type="text" class="form-control" id="balls" name="balls" aria-describedby="balls-addon">
+            </div><br>
+            
+            <button type="submit" class="btn btn-success">Calculate Batsman Strike Rate</button>
+
+            <div class="content">
+                <h1 style="text-align: center">Player Bowling  Strike Rate</h1>
+            <form action="{{ url_for('calculate') }}" method="post">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="runs-addon">Runs To Your Name</span>
+                    <input type="text" class="form-control" id="runs" name="runs" aria-describedby="runs-addon">
+                </div><br>
+                
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="balls-addon">Balls Bowled</span>
+                    <input type="text" class="form-control" id="balls" name="balls" aria-describedby="balls-addon">
+                </div><br>
+                
+                <button type="submit" class="btn btn-success">Calculate Batsman Strike Rate</button>
+
+        </form>
+    </div>
+{% endblock %}
