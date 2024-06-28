@@ -26,8 +26,13 @@ class Player(db.Model):
 
 
 @app.route("/")
-def index():
+def home():
     return render_template("home.html")
+
+
+@app.route("/index")
+def index():
+    return render_template("index.html")
 
 
 @app.route("/calculate", methods=["POST"])
