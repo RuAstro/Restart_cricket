@@ -2,11 +2,18 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 import os
+import logging
 
 
 class Base(DeclarativeBase):
     pass
 
+
+logging.basicConfig(
+    filename="app.log",
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+)
 
 db = SQLAlchemy(model_class=Base)
 # create the app
@@ -27,11 +34,13 @@ class Player(db.Model):
 
 @app.route("/")
 def home():
+    logging.info("")
     return render_template("home.html")
 
 
 @app.route("/index")
 def index():
+    logging.info("")
     return render_template("index.html")
 
 
@@ -49,11 +58,13 @@ def calculate():
     db.session.add(new_player)
     db.session.commit()
 
+    logging.info("")
     return redirect(url_for("result", strike_rate=strike_rate))
 
 
 @app.route("/result/<float:strike_rate>")
 def result(strike_rate):
+    logging.info("")
     return render_template("result.html", strike_rate=strike_rate)
 
 
