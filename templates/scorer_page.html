@@ -2,13 +2,26 @@
 
 {% block head %}
 <title>Cricket Scorer</title>
+<style>
+    .container {
+        max-width: 700px;
+        margin: auto;
+    }
+    .card {
+        margin-bottom: 5px;
+    }
+    .btn {
+        font-size: 1rem;
+    }
+</style>
 {% endblock %}
 
 {% block body %}
 <div class="container mt-5">
-    <h1 class="mb-4" style="text-align: center">Cricket Scorer</h1>
-    <div class="row mb-4">
-        <div class="col">
+    <h1 class="mb-4 text-center">Cricket Scorer</h1>
+
+    <div class="row">
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Total Runs</h5>
@@ -16,7 +29,7 @@
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Wickets</h5>
@@ -24,22 +37,30 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Overs Bowled</h5>
+                    <p class="card-text" id="overs">0</p>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <button class="btn btn-primary btn-block mb-3" onclick="addRuns(1)">1 Runs</button>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <button class="btn btn-primary btn-block mb-3" onclick="addRuns(1)">1 Run</button>
             <button class="btn btn-primary btn-block mb-3" onclick="addRuns(2)">2 Runs</button>
             <button class="btn btn-primary btn-block mb-3" onclick="addRuns(3)">3 Runs</button>
             <button class="btn btn-primary btn-block mb-3" onclick="addRuns(4)">4 Runs</button>
             <button class="btn btn-primary btn-block mb-3" onclick="addRuns(5)">5 Runs</button>
             <button class="btn btn-primary btn-block mb-3" onclick="addRuns(6)">6 Runs</button>
         </div>
-        <div class="col">
+        <div class="col-md-6">
             <button class="btn btn-danger btn-block mb-3" onclick="addWicket()">Wicket Taken</button>
             <button class="btn btn-secondary btn-block mb-3" onclick="resetScore()">Reset</button>
         </div>
     </div>
 </div>
-
 {% endblock %}
 
