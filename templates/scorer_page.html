@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Scorer</title>
+
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Cricket Scorer</h1>
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Runs</h5>
+                        <p class="card-text" id="runs">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Wickets</h5>
+                        <p class="card-text" id="wickets">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-primary btn-block mb-3" onclick="addRuns(4)">4 Runs</button>
+                <button class="btn btn-primary btn-block mb-3" onclick="addRuns(6)">6 Runs</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-danger btn-block mb-3" onclick="addWicket()">Wicket Taken</button>
+                <button class="btn btn-secondary btn-block" onclick="resetScore()">Reset</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
