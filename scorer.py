@@ -11,21 +11,16 @@ def index():
     return render_template("scorer_page.html", runs=0, wickets=0)
 
 
-@app.route("/add_runs/<int:runs>", methods=["POST"])
-def add_runs(runs):
-    current_runs = int(request.form.get("runs", 0))
-    return str(current_runs + runs)
+@app.route("/add_runs", methods=["POST"])
+def add_runs():
+    runs = int(request.form.get("runs", 0))
+    return str(runs)
 
 
 @app.route("/add_wicket", methods=["POST"])
 def add_wicket():
-    current_wickets = int(request.form.get("wickets", 0))
-    return str(current_wickets + 1)
-
-
-@app.route("/reset", methods=["POST"])
-def reset():
-    return "0"
+    wickets = int(request.form.get("wickets", 0))
+    return str(wickets + 1)
 
 
 if __name__ == "__main__":
