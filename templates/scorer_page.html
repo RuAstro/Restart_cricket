@@ -79,7 +79,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Total Runs</h5>
-                    <p class="card-text" id="runs">0</p>
+                    <p class="card-text" id="runs">{{ total_runs }}</p>
                 </div>
             </div>
         </div>
@@ -87,7 +87,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Wickets</h5>
-                    <p class="card-text" id="wickets">0</p>
+                    <p class="card-text" id="wickets">{{ total_wickets }}</p>
                 </div>
             </div>
         </div>
@@ -95,7 +95,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Overs Bowled</h5>
-                    <p class="card-text" id="overs">0</p>
+                    <p class="card-text" id="overs">{{ total_overs }}</p>
                 </div>
             </div>
         </div>
@@ -106,7 +106,7 @@
         <div class="col-md-4">
 
             <form method="post" action="/add_runs">
-                <button type="submit" name="runs" value="1" class="btn btn-primary btn-block">1 Run</button>
+                <a type="button" name="runs" value="1" class="btn btn-primary btn-block">1 Run</a>
                 <button type="submit" name="runs" value="2" class="btn btn-primary btn-block">2 Run</button>
                 <button type="submit" name="runs" value="3" class="btn btn-primary btn-block">3 Run</button>
                 <button type="submit" name="runs" value="4" class="btn btn-primary btn-block">4 Run</button>
@@ -120,7 +120,7 @@
             <form method="post" action="/add_wicket">
                 <button type="submit" name="wickets" value="1" class="btn btn-danger btn-block">Wicket Taken</button>
             </form>
-            
+
         </div>
     </div>
 
