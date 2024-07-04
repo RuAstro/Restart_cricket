@@ -102,19 +102,25 @@
     </div>
 
     <!-- Buttons Section -->
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <button class="btn btn-primary btn-block">1 Run</button>
-            <button class="btn btn-primary btn-block">2 Runs</button>
-            <button class="btn btn-primary btn-block">3 Runs</button>
-            <button class="btn btn-primary btn-block">4 Runs</button>
-            <button class="btn btn-primary btn-block">5 Runs</button>
-            <button class="btn btn-primary btn-block">6 Runs</button>
-            <button class="btn btn-primary btn-block">DOT Ball</button>
+    <div class="row mt-3">
+        <div class="col-md-4">
+
+            <form method="post" action="/add_runs">
+                <button type="submit" name="runs" value="1" class="btn btn-primary btn-block">1 Run</button>
+                <button type="submit" name="runs" value="2" class="btn btn-primary btn-block">2 Run</button>
+                <button type="submit" name="runs" value="3" class="btn btn-primary btn-block">3 Run</button>
+                <button type="submit" name="runs" value="4" class="btn btn-primary btn-block">4 Run</button>
+                <button type="submit" name="runs" value="5" class="btn btn-primary btn-block">5 Run</button>
+                <button type="submit" name="runs" value="6" class="btn btn-primary btn-block">6 Run</button>
+                <button type="submit" name="runs" value="0" class="btn btn-primary btn-block">DOT Ball</button>
+                
+            </form>
         </div>
         <div class="col-md-6">
-            <button class="btn btn-danger btn-block">Wicket Taken</button>
-            <button class="btn btn-outline-secondary btn-block">Reset</button>
+            <form method="post" action="/add_wicket">
+                <button type="submit" name="wickets" value="1" class="btn btn-danger btn-block">Wicket Taken</button>
+            </form>
+            
         </div>
     </div>
 
