@@ -39,27 +39,27 @@
 <div class="container mt-4">
     <h1 class="mb-4 text-center">Cricket Scorer</h1>
 
-    <!-- Batsmen Section -->
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Batsman 1</h5>
-                    <p class="card-text" id="batsman1-runs">0 (0 balls)</p>
-                    <p class="card-text" id="batsman1-strike-rate">Strike Rate: -</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Batsman 2</h5>
-                    <p class="card-text" id="batsman2-runs">0 (0 balls)</p>
-                    <p class="card-text" id="batsman2-strike-rate">Strike Rate: -</p>
-                </div>
+   <!-- Batsmen Section -->
+   <div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Batsman 1</h5>
+                <p class="card-text" id="batsman1-runs">{{ batsman1.runs }} ({{ batsman1.balls }} balls)</p>
+                <p class="card-text" id="batsman1-strike-rate">Strike Rate: -</p>
             </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Batsman 2</h5>
+                <p class="card-text" id="batsman2-runs">{{ batsman2.runs }} ({{ batsman2.balls }} balls)</p>
+                <p class="card-text" id="batsman2-strike-rate">Strike Rate: -</p>
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- Bowler Section -->
     <div class="row mt-4">
