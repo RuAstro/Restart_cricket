@@ -1,4 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for
+import logging
+
+
+logging.basicConfig(
+    filename="scorer.log",
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+)
 
 app = Flask(__name__)
 
@@ -11,6 +19,7 @@ total_runs = 0
 # Route to render the template initially
 @app.route("/")
 def index():
+    logging.info("User accessed the cricket scorer page.")
     return render_template(
         "scorer_page.html",
         batsman1=batsman1,
@@ -34,12 +43,14 @@ def add_runs():
         batsman2["runs"] += runs
         batsman2["balls"] += 1
 
+    logging.info(f"Total runs updated to {total_runs}.")
     return redirect(url_for("index"))
 
 
 # Route to handle adding wickets
 @app.route("/add_wicket", methods=["POST"])
 def add_wicket():
+    logging.info("Wicket added.")
     return redirect(url_for("index"))
 
 
