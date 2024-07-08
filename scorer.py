@@ -16,6 +16,15 @@ current_batsman = batsman1
 bowler = "Rabada"
 runs_against_bowler = {bowler: 0}
 
+
+def calculate_strike_rate(batsman):
+    if batsman["balls"] > 0:
+        strike_rate = (batsman["runs"] / batsman["balls"]) * 100
+        return round(strike_rate, 2)
+    else:
+        return 0.00
+
+
 # Route to render the template initially
 @app.route("/")
 def index():
@@ -27,7 +36,9 @@ def index():
         total_runs=total_runs,
         current_batsman=current_batsman["name"],
         bowler=bowler,
-        runs_against_bowler=runs_against_bowler
+        runs_against_bowler=runs_against_bowler,
+        strike_rate_batsman1=calculate_strike_rate(batsman1),
+        strike_rate_batsman2=calculate_strike_rate(batsman2),
     )
 
 # Route to handle adding runs
