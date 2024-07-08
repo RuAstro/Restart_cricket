@@ -35,8 +35,8 @@ def add_runs():
     runs = int(request.form["runs"])
     total_runs += runs
 
-    # routs for the two batsmen
-    if batsman1["balls"] <= batsman2["balls"]:
+    # Determine which batsman is on strike
+    if (batsman1["balls"] + batsman2["balls"]) % 2 == 0:
         batsman1["runs"] += runs
         batsman1["balls"] += 1
     else:
