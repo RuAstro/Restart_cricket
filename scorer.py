@@ -13,6 +13,7 @@ batsman1 = {"name": "Batsman 1", "runs": 0, "balls": 0}
 batsman2 = {"name": "Batsman 2", "runs": 0, "balls": 0}
 total_runs = 0
 current_batsman = batsman1
+bowler = "Rabada"
 
 # Route to render the template initially
 @app.route("/")
@@ -23,7 +24,8 @@ def index():
         batsman1=batsman1,
         batsman2=batsman2,
         total_runs=total_runs,
-        current_batsman=current_batsman["name"]
+        current_batsman=current_batsman["name"],
+        bowler=bowler
     )
 
 # Route to handle adding runs
