@@ -14,6 +14,7 @@ app = Flask(__name__)
 batsman1 = {"runs": 0, "balls": 0}
 batsman2 = {"runs": 0, "balls": 0}
 total_runs = 0
+current_batsman = batsman1
 
 
 # Route to render the template initially
@@ -31,19 +32,21 @@ def index():
 # Route to handle adding runs
 @app.route("/add_runs", methods=["POST"])
 def add_runs():
-    global total_runs
+    global total_runs, current_batsman
+
     runs = int(request.form["runs"])
     total_runs += runs
 
-    # Determine which batsman is on strike
-    if (batsman1["balls"] + batsman2["balls"]) % 2 == 0:
-        batsman1["runs"] += runs
-        batsman1["balls"] += 1
-    else:
-        batsman2["runs"] += runs
-        batsman2["balls"] += 1
+    current_batsman["runs"] += runs
+    current_batsman["balls"] += 1
 
-    logging.info(f"Total runs updated to {total_runs}.")
+    # Determine which batsman is on strike
+    if runs % 2 != 0:
+        current_batsman = batsman2 if current_batsman == batsman1 else batsman1
+
+    logging.info(
+        f"Total runs updated to {total_runs}. Batsman1: {batsman1['runs']}/{batsman1['balls']}. Batsman2: {batsman2['runs']}/{batsman2['balls']}."
+    )
     return redirect(url_for("index"))
 
 
