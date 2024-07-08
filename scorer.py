@@ -14,6 +14,7 @@ batsman2 = {"name": "Batsman 2", "runs": 0, "balls": 0}
 total_runs = 0
 current_batsman = batsman1
 bowler = "Rabada"
+runs_against_bowler = {bowler: 0}
 
 # Route to render the template initially
 @app.route("/")
@@ -25,7 +26,8 @@ def index():
         batsman2=batsman2,
         total_runs=total_runs,
         current_batsman=current_batsman["name"],
-        bowler=bowler
+        bowler=bowler,
+        runs_against_bowler=runs_against_bowler
     )
 
 # Route to handle adding runs
@@ -42,6 +44,13 @@ def add_runs():
     # Determine which batsman is on strike
     if runs % 2 != 0:
         current_batsman = batsman2 if current_batsman == batsman1 else batsman1
+        
+        
+    bowler_name = request.form.get("", "")
+    if bowler_name not in runs_against_bowler:
+        runs_against_bowler[bowler_name] = 0
+    runs_against_bowler[bowler_name] += runs
+
 
     logging.info(
         f"Total runs updated to {total_runs}. Batsman1: {batsman1["runs"]}/{batsman1["balls"]}. Batsman2: {batsman2["runs"]}/{batsman2["balls"]}."

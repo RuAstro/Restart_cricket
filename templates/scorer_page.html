@@ -66,8 +66,8 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Bowler</h5>
-                    <p class="card-text" id="bowler-details">{{ bowler }}</p>
+                    <h5 class="card-title">Bowler: {{ bowler }}</h5>
+                    <p class="card-text">Runs Against: {{ runs_against_bowler.get(bowler, 0) }}</p>
                 </div>
             </div>
         </div>
