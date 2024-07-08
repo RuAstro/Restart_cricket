@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 import logging
 
-
 logging.basicConfig(
     filename="scorer.log",
     level=logging.INFO,
@@ -10,12 +9,10 @@ logging.basicConfig(
 
 app = Flask(__name__)
 
-
-batsman1 = {"runs": 0, "balls": 0}
-batsman2 = {"runs": 0, "balls": 0}
+batsman1 = {"name": "Batsman 1", "runs": 0, "balls": 0}
+batsman2 = {"name": "Batsman 2", "runs": 0, "balls": 0}
 total_runs = 0
 current_batsman = batsman1
-
 
 # Route to render the template initially
 @app.route("/")
@@ -26,8 +23,8 @@ def index():
         batsman1=batsman1,
         batsman2=batsman2,
         total_runs=total_runs,
+        current_batsman=current_batsman["name"]
     )
-
 
 # Route to handle adding runs
 @app.route("/add_runs", methods=["POST"])
@@ -45,7 +42,7 @@ def add_runs():
         current_batsman = batsman2 if current_batsman == batsman1 else batsman1
 
     logging.info(
-        f"Total runs updated to {total_runs}. Batsman1: {batsman1['runs']}/{batsman1['balls']}. Batsman2: {batsman2['runs']}/{batsman2['balls']}."
+        f"Total runs updated to {total_runs}. Batsman1: {batsman1["runs"]}/{batsman1["balls"]}. Batsman2: {batsman2["runs"]}/{batsman2["balls"]}."
     )
     return redirect(url_for("index"))
 
