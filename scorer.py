@@ -32,6 +32,9 @@ total_runs = 0
 current_batsman = batsman1
 bowler = "Rabada"
 runs_against_bowler = {bowler: 0}
+total_runs = 0
+total_overs = 0
+balls_faced = 0
 
 
 class Batsman(db.Model):
@@ -56,9 +59,25 @@ def calculate_strike_rate(batsman):
         return 0.00
 
 
+def calculate_current_run_rate():
+    if balls_faced > 0:
+        overs = total_overs + (
+            balls_faced // 6
+        )  # Integer division to get complete overs
+        balls_in_current_over = balls_faced % 6
+        if balls_in_current_over > 0:
+            overs += 1  # Increment if there are remaining balls in the current over
+
+        current_run_rate = total_runs / overs
+        return round(current_run_rate, 2)
+    else:
+        return 0.00
+
+
 # Route to render the template initially
 @app.route("/")
 def index():
+    global total_runs, total_overs, balls_faced
     logging.info("User accessed the cricket scorer page.")
     return render_template(
         "scorer_page.html",
@@ -70,19 +89,23 @@ def index():
         runs_against_bowler=runs_against_bowler,
         strike_rate_batsman1=calculate_strike_rate(batsman1),
         strike_rate_batsman2=calculate_strike_rate(batsman2),
+        current_run_rate=calculate_current_run_rate(),
+        total_overs=total_overs,
     )
 
 
 # Route to handle adding runs
 @app.route("/add_runs", methods=["POST"])
 def add_runs():
-    global total_runs, current_batsman
+    global total_runs, current_batsman, total_overs, balls_faced
 
     runs = int(request.form["runs"])
     total_runs += runs
 
     current_batsman["runs"] += runs
     current_batsman["balls"] += 1
+
+    balls_faced += 1
 
     # Determine which batsman is on strike
     if runs % 2 != 0:
@@ -97,6 +120,9 @@ def add_runs():
         # Create a new bowler entry if not exists
         bowler = Bowler(name=bowler_name, runs_given=runs, balls_bowled=1)
         db.session.add(bowler)
+
+    if balls_faced % 6 == 0:
+        total_overs += 1
 
     db.session.commit()
 
