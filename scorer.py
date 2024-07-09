@@ -33,7 +33,7 @@ current_batsman = batsman1
 bowler = "Rabada"
 runs_against_bowler = {bowler: 0}
 total_runs = 0
-total_overs = 0
+total_overs = 0.0
 balls_faced = 0
 
 
@@ -66,7 +66,7 @@ def calculate_current_run_rate():
         )  # Integer division to get complete overs
         balls_in_current_over = balls_faced % 6
         if balls_in_current_over > 0:
-            overs += 1  # Increment if there are remaining balls in the current over
+            overs += 1
 
         current_run_rate = total_runs / overs
         return round(current_run_rate, 2)
