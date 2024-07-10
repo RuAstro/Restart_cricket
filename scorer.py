@@ -32,9 +32,9 @@ total_runs = 0
 current_batsman = batsman1
 bowler = "Rabada"
 runs_against_bowler = {bowler: 0}
-total_runs = 0
 total_overs = 0.0
 balls_faced = 0
+total_wickets = 0
 
 
 class Batsman(db.Model):
@@ -77,7 +77,7 @@ def calculate_current_run_rate():
 # Route to render the template initially
 @app.route("/")
 def index():
-    global total_runs, total_overs, balls_faced
+    global total_runs, total_overs, balls_faced, total_wickets
     logging.info("User accessed the cricket scorer page.")
     return render_template(
         "scorer_page.html",
@@ -91,6 +91,7 @@ def index():
         strike_rate_batsman2=calculate_strike_rate(batsman2),
         current_run_rate=calculate_current_run_rate(),
         total_overs=total_overs,
+        total_wickets=total_wickets,
     )
 
 
@@ -137,6 +138,8 @@ def add_runs():
 # Route to handle adding wickets
 @app.route("/add_wicket", methods=["POST"])
 def add_wicket():
+    global total_wickets
+    total_wickets += 1
     logging.info("Wicket added.")
     return redirect(url_for("index"))
 
