@@ -123,6 +123,8 @@ def add_runs():
 
     if balls_faced % 6 == 0:
         total_overs += 1
+        # Switch batsmen after completing an over
+        current_batsman = batsman2 if current_batsman == batsman1 else batsman1
 
     db.session.commit()
 
