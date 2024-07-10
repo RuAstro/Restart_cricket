@@ -39,18 +39,25 @@ balls_faced = 0
 total_wickets = 0
 
 
+class Teams(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    table_ranked = db.Column(db.Integer, default=0)
+
+
 class Batsman(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     runs = db.Column(db.Integer, default=0)
-    balls = db.Column(db.Integer, default=0)
+    balls_faced = db.Column(db.Integer, default=0)
+    strike_rate = db.Column(db.Integer, default=0)
 
 
 class Bowler(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     runs_given = db.Column(db.Integer, default=0)
-    balls_bowled = db.Column(db.Integer, default=0)
+    overs_bowled = db.Column(db.Integer, default=0)
 
 
 def calculate_strike_rate(batsman):
