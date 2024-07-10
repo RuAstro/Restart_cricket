@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 import logging
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
@@ -18,6 +18,8 @@ logging.basicConfig(
 db = SQLAlchemy(model_class=Base)
 # create the app
 app = Flask(__name__)
+# Secret Key
+app.secret_key = "James Bond"
 # Get the absolute path to the directory where this script is located
 basedir = os.path.abspath(os.path.dirname(__file__))
 # configure the SQLite database, relative to the app instance folder
@@ -74,6 +76,13 @@ def calculate_current_run_rate():
         return 0.00
 
 
+def end_inning():
+    if total_wickets > 9:
+        return "End Of Inning"
+    else:
+        return "First Inning"
+
+
 # Route to render the template initially
 @app.route("/")
 def index():
@@ -92,6 +101,7 @@ def index():
         current_run_rate=calculate_current_run_rate(),
         total_overs=total_overs,
         total_wickets=total_wickets,
+        inning=end_inning(),
     )
 
 
