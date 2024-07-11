@@ -3,6 +3,7 @@ import logging
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 import os
+from cricket_calculation import calculate_strike_rate, calculate_current_run_rate
 
 
 class Base(DeclarativeBase):
@@ -57,30 +58,7 @@ class Bowler(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     runs_given = db.Column(db.Integer, default=0)
-    overs_bowled = db.Column(db.Integer, default=0)
-
-
-def calculate_strike_rate(batsman):
-    if batsman["balls"] > 0:
-        strike_rate = (batsman["runs"] / batsman["balls"]) * 100
-        return round(strike_rate, 2)
-    else:
-        return 0.00
-
-
-def calculate_current_run_rate():
-    if balls_faced > 0:
-        overs = total_overs + (
-            balls_faced // 6
-        )  # Integer division to get complete overs
-        balls_in_current_over = balls_faced % 6
-        if balls_in_current_over > 0:
-            overs += 1
-
-        current_run_rate = total_runs / overs
-        return round(current_run_rate, 2)
-    else:
-        return 0.00
+    balls_bowled = db.Column(db.Integer, default=0)
 
 
 def end_inning():
@@ -105,7 +83,9 @@ def index():
         runs_against_bowler=runs_against_bowler,
         strike_rate_batsman1=calculate_strike_rate(batsman1),
         strike_rate_batsman2=calculate_strike_rate(batsman2),
-        current_run_rate=calculate_current_run_rate(),
+        current_run_rate=calculate_current_run_rate(
+            balls_faced, total_runs, total_overs
+        ),
         total_overs=total_overs,
         total_wickets=total_wickets,
         inning=end_inning(),
