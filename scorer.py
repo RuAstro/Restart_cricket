@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+from module_db import db, Teams, Batsman, Bowler
+from cricket_calculation import calculate_strike_rate, calculate_current_run_rate
 import logging
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 import os
-from cricket_calculation import calculate_strike_rate, calculate_current_run_rate
 
 
 class Base(DeclarativeBase):
@@ -16,7 +16,6 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(message)s",
 )
 
-db = SQLAlchemy(model_class=Base)
 # create the app
 app = Flask(__name__)
 # Secret Key
@@ -38,27 +37,6 @@ runs_against_bowler = {bowler: 0}
 total_overs = 0.0
 balls_faced = 0
 total_wickets = 0
-
-
-class Teams(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    table_ranked = db.Column(db.Integer, default=0)
-
-
-class Batsman(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    runs = db.Column(db.Integer, default=0)
-    balls_faced = db.Column(db.Integer, default=0)
-    strike_rate = db.Column(db.Integer, default=0)
-
-
-class Bowler(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    runs_given = db.Column(db.Integer, default=0)
-    balls_bowled = db.Column(db.Integer, default=0)
 
 
 def end_inning():
