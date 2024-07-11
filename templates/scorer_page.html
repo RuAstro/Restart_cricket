@@ -60,17 +60,33 @@
             </div>
         </div>
     </div>
-    <!-- Bowler Section -->
-    <div class="row mt-4">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Bowler: {{ bowler }}</h5>
-                    <p class="card-text">Runs Against: {{ runs_against_bowler.get(bowler, 0) }}</p>
-                </div>
+
+<!-- Bowler Section -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Current Bowler</h5>
+                <p class="card-text">Bowler: {{ bowler }}</p>
+                <p class="card-text">Runs Against: {{ runs_against_bowler.get(bowler, 0) }}</p>
             </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Select Next Bowler</h5>
+                <form method="post" action="/change_bowler">
+                    <div class="form-group">
+                        <select name="next_bowler" class="form-control">
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Change Bowler</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- Scoreboard Section -->
     <div class="row mt-4">
