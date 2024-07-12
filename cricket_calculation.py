@@ -1,4 +1,4 @@
-def calculate_strike_rate(batsman):
+def calculate_strike_rate(total_balls: int, total_runs: int) -> float:
     """
     Calculate the strike rate of a batsman in cricket.
 
@@ -9,15 +9,15 @@ def calculate_strike_rate(batsman):
     Returns:
         float: Strike rate rounded to 2 decimal places.
     """
-    if batsman["balls"] > 0:
-        strike_rate = (batsman["runs"] / batsman["balls"]) * 100
+    if total_balls > 0:
+        strike_rate = (total_runs / total_balls) * 100
         return round(strike_rate, 2)
     else:
         return 0.00
 
 
 def calculate_current_run_rate(
-    balls_faced: int, total_runs: int, total_overs: float
+    balls_faced: int, total_runs: int, total_overs: int
 ) -> float:
     """
     Calculate the current run rate in a cricket match.
@@ -25,7 +25,7 @@ def calculate_current_run_rate(
     Args:
         balls_faced (int): Number of balls faced by the batting team.
         total_runs (int): Total runs scored by the batting team.
-        total_overs (float): Total overs bowled in the match.
+        total_overs (int): Total overs bowled in the match.
 
     Returns:
         float: Current run rate rounded to 2 decimal places.
@@ -40,3 +40,18 @@ def calculate_current_run_rate(
         return round(current_run_rate, 2)
     else:
         return 0.00
+
+
+def is_inning_over(total_wickets) -> bool:
+    """Check if the inning is over based on the number of wickets fallen.
+
+    Args:
+        total_wickets (int): Total number of wickets fallen in the inning.
+
+    Returns:
+        bool: True if the inning is over (more than 9 wickets fallen), False otherwise.
+    """
+    if total_wickets > 9:
+        return True
+    else:
+        return False
