@@ -76,9 +76,9 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Select Next Bowler</h5>
-                <button type="button" class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#changeBowlerModal">
-                    Change Bowler
-                </button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Select Next Bowler
+                </button>                
             </div>
         </div>
     </div>
@@ -113,24 +113,30 @@
     </div>
 
     <!-- Buttons Section -->
-    <div class="row mt-3">
-        <div class="col-md-4">
-            <form method="post" action="/add_runs">
-                <button type="submit" name="runs" value="1" class="btn btn-primary btn-block">1 Run</button>
-                <button type="submit" name="runs" value="2" class="btn btn-primary btn-block">2 Run</button>
-                <button type="submit" name="runs" value="3" class="btn btn-primary btn-block">3 Run</button>
-                <button type="submit" name="runs" value="4" class="btn btn-primary btn-block">4 Run</button>
-                <button type="submit" name="runs" value="5" class="btn btn-primary btn-block">5 Run</button>
-                <button type="submit" name="runs" value="6" class="btn btn-primary btn-block">6 Run</button>
-                <button type="submit" name="runs" value="0" class="btn btn-primary btn-block">DOT Ball</button>
-            </form>
-        </div>
-        <div class="col-md-4">
-            <form method="post" action="/add_wicket">
-                <button type="submit" name="wickets" value="1" class="btn btn-danger btn-block">Wicket Taken</button>
-            </form>
-        </div>
+<div class="row mt-3">
+    <div class="col-md-8">
+        <form method="post" action="/add_runs">
+            <div class="btn-group" role="group" aria-label="Runs and Dot Ball">
+                <button type="submit" name="runs" value="1" class="btn btn-outline-primary">1 Run</button>
+                <button type="submit" name="runs" value="2" class="btn btn-outline-primary">2 Runs</button>
+                <button type="submit" name="runs" value="3" class="btn btn-outline-primary">3 Runs</button>
+                <button type="submit" name="runs" value="4" class="btn btn-outline-primary">4 Runs</button>
+                <button type="submit" name="runs" value="5" class="btn btn-outline-primary">5 Runs</button>
+                <button type="submit" name="runs" value="6" class="btn btn-outline-primary">6 Runs</button>
+                <button type="submit" name="runs" value="0" class="btn btn-outline-primary">Dot Ball</button>
+            </div>
+        </form>
     </div>
+    <div class="col-md-4">
+        <form method="post" action="/add_wicket">
+            <button type="submit" name="wickets" value="1" class="btn btn-danger btn-block">Wicket Taken</button>
+        </form>
+        <form method="post" action="/add_runs" class="mt-2">
+            <button type="submit" name="runs" value="1" class="btn btn-outline-warning btn-block">Wide Ball</button>
+            <button type="submit" name="runs" value="1" class="btn btn-outline-secondary btn-block">No Ball</button>
+        </form>
+    </div>
+</div>
 
 
     <!-- Additional Stats Section -->
@@ -161,14 +167,24 @@
         </div>
     </div>
 </div>
-
-<!-- Modal -->
-
-<div class="modal-body">
-    <h2 class="fs-5">Popover in a modal</h2>
-    <p>This <button class="btn btn-secondary" data-bs-toggle="popover" title="Popover title" data-bs-content="Popover body content is set in this attribute.">button</button> triggers a popover on click.</p>
-    <hr>
-    <h2 class="fs-5">Tooltips in a modal</h2>
-    <p><a href="#" data-bs-toggle="tooltip" title="Tooltip">This link</a> and <a href="#" data-bs-toggle="tooltip" title="Tooltip">that link</a> have tooltips on hover.</p>
+ 
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalLive" tabindex="-1" aria-labelledby="exampleModalLiveLabel" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLiveLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Woo-hoo, you're reading this text in a modal!</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
   </div>
+</div>
+
 {% endblock %}
