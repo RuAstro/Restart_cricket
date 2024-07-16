@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from module_db import db, Teams, Batsman, Bowler
-from cricket_calculation import calculate_strike_rate, calculate_current_run_rate
+from models import db, Balls, Bowler
+from cricket_calculation import (
+    calculate_strike_rate,
+    calculate_current_run_rate,
+    is_inning_over,
+)
 import logging
 from sqlalchemy.orm import DeclarativeBase
 import os
@@ -39,13 +43,6 @@ balls_faced = 0
 total_wickets = 0
 
 
-def end_inning():
-    if total_wickets > 9:
-        return "End Of Inning"
-    else:
-        return "First Inning"
-
-
 # Route to render the template initially
 @app.route("/")
 def index():
@@ -59,14 +56,14 @@ def index():
         current_batsman=current_batsman["name"],
         bowler=bowler,
         runs_against_bowler=runs_against_bowler,
-        strike_rate_batsman1=calculate_strike_rate(batsman1),
-        strike_rate_batsman2=calculate_strike_rate(batsman2),
+        strike_rate_batsman1=calculate_strike_rate(batsman1["runs"], batsman1["balls"]),
+        strike_rate_batsman2=calculate_strike_rate(batsman2["runs"], batsman2["balls"]),
         current_run_rate=calculate_current_run_rate(
             balls_faced, total_runs, total_overs
         ),
         total_overs=total_overs,
         total_wickets=total_wickets,
-        inning=end_inning(),
+        inning=is_inning_over(total_wickets),
     )
 
 
