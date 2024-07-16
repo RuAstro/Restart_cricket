@@ -52,6 +52,6 @@ def is_inning_over(total_wickets) -> bool:
         bool: True if the inning is over (more than 9 wickets fallen), False otherwise.
     """
     if total_wickets > 9:
-        return "End Of Inning"
+        return True
     else:
-        return "First Inning"
+        return False
