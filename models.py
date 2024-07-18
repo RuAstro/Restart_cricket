@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, Boolean
 
 db = SQLAlchemy()
 
@@ -78,8 +78,17 @@ class Bowler(db.Model):
     balls_bowled = Column(Integer, default=0)
 
 
-class Balls(db.Model):
+class Balls(Base):
+    """
+    SQLAlchemy model for storing information about balls.
+    """
+
+    __tablename__ = "balls"
+
     id = Column(Integer, primary_key=True)
-    run_per_ball = Column(String(100), nullable=False)
-    wide_ball = Column(Integer, default=0)
-    no_ball = Column(Integer, default=0)
+    run_per_ball = Column(Integer, nullable=False)
+    wide_ball = Column(Boolean, default=False)
+    no_ball = Column(Boolean, default=False)
+    four_runs = Column(Integer)
+    six_runs = Column(Integer)
+    over_number = Column(Integer)
