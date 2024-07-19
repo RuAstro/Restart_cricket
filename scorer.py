@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from models import db, Balls, Bowler
+from models import db, Bowler, Balls
 from cricket_calculation import (
     calculate_strike_rate,
     calculate_current_run_rate,
@@ -64,6 +64,7 @@ def index():
         total_overs=total_overs,
         total_wickets=total_wickets,
         inning=is_inning_over(total_wickets),
+        over_ended=True,
     )
 
 
