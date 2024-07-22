@@ -6,12 +6,7 @@ from cricket_calculation import (
     is_inning_over,
 )
 import logging
-from sqlalchemy.orm import DeclarativeBase
 import os
-
-
-class Base(DeclarativeBase):
-    pass
 
 
 logging.basicConfig(
@@ -36,8 +31,8 @@ batsman1 = {"name": "Batsman 1", "runs": 0, "balls": 0}
 batsman2 = {"name": "Batsman 2", "runs": 0, "balls": 0}
 total_runs = 0
 current_batsman = batsman1
-bowler = "Rabada"
-runs_against_bowler = {bowler: 0}
+bowler_name = "Rabada"
+runs_against_bowler = {bowler_name: 0}
 total_overs = 0.0
 balls_faced = 0
 total_wickets = 0
@@ -46,7 +41,7 @@ total_wickets = 0
 # Route to render the template initially
 @app.route("/")
 def index():
-    global total_runs, total_overs, balls_faced, total_wickets
+    global total_runs, total_overs, balls_faced, total_wickets, current_batsman, bowler_name
     logging.info("User accessed the cricket scorer page.")
     return render_template(
         "scorer_page.html",
@@ -54,7 +49,7 @@ def index():
         batsman2=batsman2,
         total_runs=total_runs,
         current_batsman=current_batsman["name"],
-        bowler=bowler,
+        bowler=bowler_name,
         runs_against_bowler=runs_against_bowler,
         strike_rate_batsman1=calculate_strike_rate(batsman1["runs"], batsman1["balls"]),
         strike_rate_batsman2=calculate_strike_rate(batsman2["runs"], batsman2["balls"]),
@@ -71,21 +66,38 @@ def index():
 # Route to handle adding runs
 @app.route("/add_runs", methods=["POST"])
 def add_runs():
-    global total_runs, current_batsman, total_overs, balls_faced
+    global total_runs, current_batsman, total_overs, balls_faced, runs_against_bowler, bowler_name
 
+    # Retrieve the number of runs from the form
     runs = int(request.form["runs"])
     total_runs += runs
 
+    # Update current batsman's runs and balls faced
     current_batsman["runs"] += runs
     current_batsman["balls"] += 1
 
+    # Update the total balls faced
     balls_faced += 1
 
     # Determine which batsman is on strike
     if runs % 2 != 0:
         current_batsman = batsman2 if current_batsman == batsman1 else batsman1
 
-    bowler_name = request.form.get("bowler", "")
+    # Get or set the bowler name from the form
+    form_bowler_name = request.form.get("bowler", bowler_name)
+    if form_bowler_name != bowler_name:
+        bowler_name = form_bowler_name
+
+    # Update the runs against the bowler
+    if bowler_name not in runs_against_bowler:
+        runs_against_bowler[bowler_name] = 0
+    runs_against_bowler[bowler_name] += runs
+
+    # Record the ball bowled
+    ball = Balls(bowler=bowler_name, runs=runs)
+    db.session.add(ball)
+
+    # Handle bowler's statistics
     bowler = Bowler.query.filter_by(name=bowler_name).first()
     if bowler:
         bowler.runs_given += runs
@@ -95,13 +107,15 @@ def add_runs():
         bowler = Bowler(name=bowler_name, runs_given=runs, balls_bowled=1)
         db.session.add(bowler)
 
+    # Update the overs and switch batsmen after each over
     if balls_faced % 6 == 0:
         total_overs += 1
-        # Switch batsmen after completing an over
         current_batsman = batsman2 if current_batsman == batsman1 else batsman1
 
+    # Commit the changes to the database
     db.session.commit()
 
+    # Log the changes
     logging.info(
         f"Total runs updated to {total_runs}. Batsman1: {batsman1['runs']}/{batsman1['balls']}. Batsman2: {batsman2['runs']}/{batsman2['balls']}."
     )
