@@ -68,7 +68,6 @@ def index():
 def add_runs():
     global total_runs, current_batsman, total_overs, balls_faced, runs_against_bowler, bowler_name
 
-    # Retrieve the number of runs from the form
     runs = int(request.form["runs"])
     total_runs += runs
 
@@ -83,25 +82,33 @@ def add_runs():
     if runs % 2 != 0:
         current_batsman = batsman2 if current_batsman == batsman1 else batsman1
 
-    # Get or set the bowler name from the form
+    return redirect(url_for("index"))
+
+
+# Route to handle update bowlers
+@app.route("/update_bowler", methods=["POST"])
+def update_bowler():
+    global bowler_name, runs_against_bowler
+
     form_bowler_name = request.form.get("bowler", bowler_name)
     if form_bowler_name != bowler_name:
         bowler_name = form_bowler_name
 
-    # Update the runs against the bowler
     if bowler_name not in runs_against_bowler:
         runs_against_bowler[bowler_name] = 0
-    runs_against_bowler[bowler_name] += runs
 
-    # Update the overs and switch batsmen after each over
+    return redirect(url_for("index"))
+
+
+# Route to handle update overs
+@app.route("/update_overs", methods=["POST"])
+def update_overs():
+    global total_overs, current_batsman
+
     if balls_faced % 6 == 0:
         total_overs += 1
         current_batsman = batsman2 if current_batsman == batsman1 else batsman1
 
-    # Log the changes
-    logging.info(
-        f"Total runs updated to {total_runs}. Batsman1: {batsman1['runs']}/{batsman1['balls']}. Batsman2: {batsman2['runs']}/{batsman2['balls']}."
-    )
     return redirect(url_for("index"))
 
 
@@ -114,6 +121,7 @@ def add_wicket():
     return redirect(url_for("index"))
 
 
+# Route to handle for next ball
 @app.route("/next_ball", methods=["POST"])
 def next_ball(bowler_name, runs, wide_ball, no_ball, four_runs, six_runs):
     balls += 1
