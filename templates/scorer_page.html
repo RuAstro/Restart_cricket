@@ -117,7 +117,7 @@
                         <label class="form-check-label" for="fithRadio">Bowler5</label>
                       </li>
                   </ul>
-                <p>Additional content for selecting next bowler can be added here if needed.</p>
+                <p>Choose your next bowler.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -174,12 +174,35 @@
         <form method="post" action="/add_wicket">
             <button type="submit" name="wickets" value="1" class="btn btn-danger btn-block">Wicket Taken</button>
         </form>
+
         <form method="post" action="/add_runs" class="mt-2">
-            <button type="submit" name="runs" value="1" class="btn btn-outline-warning btn-block">Wide Ball</button>
-            <button type="submit" name="runs" value="1" class="btn btn-outline-secondary btn-block">No Ball</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Wide Ball
+              </button>
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                No Ball
+              </button>
         </form>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Which Batsman is on Strike</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
     <!-- Additional Stats Section -->
