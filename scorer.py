@@ -93,27 +93,10 @@ def add_runs():
         runs_against_bowler[bowler_name] = 0
     runs_against_bowler[bowler_name] += runs
 
-    # Record the ball bowled
-    ball = Balls(bowler=bowler_name, runs=runs)
-    db.session.add(ball)
-
-    # Handle bowler's statistics
-    bowler = Bowler.query.filter_by(name=bowler_name).first()
-    if bowler:
-        bowler.runs_given += runs
-        bowler.balls_bowled += 1
-    else:
-        # Create a new bowler entry if not exists
-        bowler = Bowler(name=bowler_name, runs_given=runs, balls_bowled=1)
-        db.session.add(bowler)
-
     # Update the overs and switch batsmen after each over
     if balls_faced % 6 == 0:
         total_overs += 1
         current_batsman = batsman2 if current_batsman == batsman1 else batsman1
-
-    # Commit the changes to the database
-    db.session.commit()
 
     # Log the changes
     logging.info(
@@ -128,6 +111,17 @@ def add_wicket():
     global total_wickets
     total_wickets += 1
     logging.info("Wicket added.")
+    return redirect(url_for("index"))
+
+
+@app.route("/next_ball", methods=["POST"])
+def next_ball(bowler_name, runs, wide_ball, no_ball, four_runs, six_runs):
+    balls += 1
+    ball = Balls(bowler=bowler_name)
+    db.session.add(ball)
+    # Commit the changes to the database
+    db.session.commit()
+    logging.info("Next Ball added.")
     return redirect(url_for("index"))
 
 
