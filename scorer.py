@@ -103,11 +103,11 @@ def update_bowler():
 # Route to handle update overs
 @app.route("/update_overs", methods=["POST"])
 def update_overs():
-    global total_overs, current_batsman
+    global total_overs
 
-    if balls_faced % 6 == 0:
-        total_overs += 1
-        current_batsman = batsman2 if current_batsman == batsman1 else batsman1
+    # Increment overs when 6 balls are faced
+    if balls_faced > 0 and balls_faced % 6 == 0:
+        total_overs += 0.1
 
     return redirect(url_for("index"))
 
