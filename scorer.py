@@ -36,6 +36,7 @@ runs_against_bowler = {bowler_name: 0}
 total_overs = 0.0
 balls_faced = 0
 total_wickets = 0
+previous_state = None
 
 
 # Route to render the template initially
@@ -130,6 +131,24 @@ def next_ball(bowler_name, runs, wide_ball, no_ball, four_runs, six_runs):
     # Commit the changes to the database
     db.session.commit()
     logging.info("Next Ball added.")
+    return redirect(url_for("index"))
+
+
+# Route to handle undo button
+@app.route("/undo", methods=["POST"])
+def undo():
+
+    if previous_state:
+        batsman1 = previous_state["batsman1"]
+        batsman2 = previous_state["batsman2"]
+        bowler_name = previous_state["bowler_name"]
+        total_runs = previous_state["total_runs"]
+        total_wickets = previous_state["total_wickets"]
+        total_overs = previous_state["total_overs"]
+
+        # Clear previous state after undoing
+        previous_state = None
+
     return redirect(url_for("index"))
 
 
