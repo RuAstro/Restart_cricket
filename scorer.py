@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+from dataclasses import dataclass
 from models import db, Bowler, Balls
 from cricket_calculation import (
     calculate_strike_rate,
@@ -25,18 +26,46 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
     basedir, "tracking.db"
 )
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
 batsman1 = {"name": "Batsman 1", "runs": 0, "balls": 0}
 batsman2 = {"name": "Batsman 2", "runs": 0, "balls": 0}
+bowler_name = "Rabada"
 total_runs = 0
 current_batsman = batsman1
-bowler_name = "Rabada"
+current_bowler = bowler_name
+batsman_name = batsman1
 runs_against_bowler = {bowler_name: 0}
 total_overs = 0.0
 balls_faced = 0
 total_wickets = 0
 previous_state = None
+
+# Values to reset after each ball
+current_runs = 0
+current_wide_ball = False
+current_no_ball = False
+current_four_runs = False
+current_six_runs = False
+
+
+@dataclass
+class Batsman:
+    name: str
+    runs: int = 0
+    balls: int = 0
+
+
+@dataclass
+class Bowler:
+    name: str
+    runs_conceded: int = 0
+    overs_bowled: float = 0.0
+    wickets_taken: int = 0
+
+    def total_cost(self) -> float:
+        return self.unit_price * self.quantity_on_hand
 
 
 # Route to render the template initially
@@ -49,7 +78,7 @@ def index():
         batsman1=batsman1,
         batsman2=batsman2,
         total_runs=total_runs,
-        current_batsman=current_batsman["name"],
+        current_batsman=current_batsman,
         bowler=bowler_name,
         runs_against_bowler=runs_against_bowler,
         strike_rate_batsman1=calculate_strike_rate(batsman1["runs"], batsman1["balls"]),
@@ -124,13 +153,37 @@ def add_wicket():
 
 # Route to handle for next ball
 @app.route("/next_ball", methods=["POST"])
-def next_ball(bowler_name, runs, wide_ball, no_ball, four_runs, six_runs):
-    balls += 1
-    ball = Balls(bowler=bowler_name)
+def next_ball(
+    current_bowler=current_bowler,
+    current_batsman=current_batsman["name"],
+    current_runs=current_runs,
+    current_no_ball=current_no_ball,
+    current_wide_ball=current_wide_ball,
+    current_four_runs=current_four_runs,
+    current_six_runs=current_six_runs,
+):
+    # Create a new Balls entry for the current ball
+    ball = Balls(
+        bowler=current_bowler,
+        batsman=current_batsman,
+        runs=current_runs,
+        no_ball=current_no_ball,
+        wide_ball=current_wide_ball,
+        four_runs=current_four_runs,
+        six_runs=current_six_runs,
+    )
     db.session.add(ball)
-    # Commit the changes to the database
     db.session.commit()
-    logging.info("Next Ball added.")
+
+    # Reset values for the next ball
+    current_bowler = bowler_name
+    current_batsman = batsman_name
+    current_runs = 0
+    current_wide_ball = False
+    current_no_ball = False
+    current_four_runs = False
+    current_six_runs = False
+
     return redirect(url_for("index"))
 
 
