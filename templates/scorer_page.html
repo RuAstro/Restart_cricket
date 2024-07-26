@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Cricket Scorer</title>
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .card {
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .card-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+    .card-body {
+        padding: 15px;
+    }
+    .btn {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">Cricket Scorer</h1>
+
+    <!-- Batsmen Section -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card {% if current_batsman == batsman1 %}border-primary shadow{% endif %}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ batsman1.name }}</h5>
+                    <p class="card-text" id="batsman1-runs">{{ batsman1.runs }} ({{ batsman1.balls }} balls)</p>
+                    <p class="card-text" id="batsman1-strike-rate">Strike Rate: {{ strike_rate_batsman1 }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card {% if current_batsman == batsman2 %}border-primary shadow{% endif %}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ batsman2.name }}</h5>
+                    <p class="card-text" id="batsman2-runs">{{ batsman2.runs }} ({{ batsman2.balls }} balls)</p>
+                    <p class="card-text" id="batsman2-strike-rate">Strike Rate: {{ strike_rate_batsman2 }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- Bowler Section -->
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Current Bowler</h5>
+                <p class="card-text">Bowler: {{ bowler }}</p>
+                <p class="card-text">Runs Against: {{ bowler.runs }}</p>
+            </div>
+        </div>
+    </div>
+
+<!-- Button to launch modal for selecting next bowler -->
+<div class="col-md-6">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Select Next Bowler</h5>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#selectNextBowlerModal">
+                Select Next Bowler
+            </button>                
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="selectNextBowlerModal" tabindex="-1" aria-labelledby="selectNextBowlerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="selectNextBowlerModalLabel">Select Next Bowler</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                      <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="Bowler1">
+                      <label class="form-check-label" for="firstRadio">Bowler1</label>
+                    </li>
+                    <li class="list-group-item">
+                      <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="Bowler2">
+                      <label class="form-check-label" for="secondRadio">Bowler2</label>
+                    </li>
+                    <li class="list-group-item">
+                      <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="Bowler3">
+                      <label class="form-check-label" for="thirdRadio">Bowler 3</label>
+                    </li>
+                    <li class="list-group-item">
+                        <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="Bowler4">
+                        <label class="form-check-label" for="forthRadio">Bowler4</label>
+                    </li>
+                    <li class="list-group-item">
+                        <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="Bowler5">
+                        <label class="form-check-label" for="fithRadio">Bowler5</label>
+                      </li>
+                  </ul>
+                <p>Choose your next bowler.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Scoreboard Section -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Runs</h5>
+                    <p class="card-text" id="runs">{{ total_runs }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Wickets</h5>
+                    <p class="card-text" id="wickets">{{ total_wickets }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Overs Bowled</h5>
+                    <p class="card-text" id="overs">{{ total_overs }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Buttons Section -->
+<div class="row mt-3">
+    <div class="col-md-8">
+        <form method="post" action="/add_runs">
+            <div class="btn-group" role="group" aria-label="Runs and Dot Ball">
+                <button type="submit" name="runs" value="1" class="btn btn-outline-primary">1 Run</button>
+                <button type="submit" name="runs" value="2" class="btn btn-outline-primary">2 Runs</button>
+                <button type="submit" name="runs" value="3" class="btn btn-outline-primary">3 Runs</button>
+                <button type="submit" name="runs" value="4" class="btn btn-outline-primary">4 Runs</button>
+                <button type="submit" name="runs" value="5" class="btn btn-outline-primary">5 Runs</button>
+                <button type="submit" name="runs" value="6" class="btn btn-outline-primary">6 Runs</button>
+                <button type="submit" name="runs" value="0" class="btn btn-outline-primary">Dot Ball</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <form method="post" action="/add_wicket">
+            <button type="submit" name="wickets" value="1" class="btn btn-danger btn-block">Wicket Taken</button>
+        </form>
+
+        <form method="post" action="/add_runs" class="mt-2">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Wide Ball
+              </button>
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                No Ball
+              </button>
+        </form>
+    </div>
+</div>
+<div class="col-md-10">
+    <form method="post" action="/next_ball">
+        <button type="submit" name="Next Ball" value="Continue" class="btn btn-info btn-block">Confirm Input</button>
+    </form>
+<!-- Undo Button -->
+<div class="row mt-4">
+    <div class="col-md-12 text-center">
+        <form method="post" action="/undo">
+            <button type="submit" class="btn btn-warning">Undo Last Action</button>
+        </form>
+    </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Which Batsman is on Strike</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Confirm No/Wide Ball
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    <!-- Additional Stats Section -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Current Run Rate</h5>
+                    <p class="card-text" id="current-run-rate">{{ current_run_rate }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Required Run Rate</h5>
+                    <p class="card-text" id="required-run-rate">0.00</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Inning</h5>
+                    <p class="card-text" id="inning">{{ inning }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+
+{% endblock %}

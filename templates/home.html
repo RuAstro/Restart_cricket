@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Home Page</title>
+{% endblock %}
+
+{% block body %}
+    <div class="content">
+        <h1 style="text-align: center">Welcome To Cricket Strike Rate Calculator</h1> 
+        <div class="text-center mt-3">
+            <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">Calculate Batsman Strike Rate</a>
+        </div>
+    </div>
+{% endblock %}
