@@ -42,7 +42,7 @@
     <!-- Batsmen Section -->
     <div class="row">
         <div class="col-md-6">
-            <div class="card {% if current_batsman == batsman1['name'] %}border-primary shadow{% endif %}">
+            <div class="card {% if current_batsman == batsman1 %}border-primary shadow{% endif %}">
                 <div class="card-body">
                     <h5 class="card-title">{{ batsman1.name }}</h5>
                     <p class="card-text" id="batsman1-runs">{{ batsman1.runs }} ({{ batsman1.balls }} balls)</p>
@@ -51,7 +51,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card {% if current_batsman == batsman2['name'] %}border-primary shadow{% endif %}">
+            <div class="card {% if current_batsman == batsman2 %}border-primary shadow{% endif %}">
                 <div class="card-body">
                     <h5 class="card-title">{{ batsman2.name }}</h5>
                     <p class="card-text" id="batsman2-runs">{{ batsman2.runs }} ({{ batsman2.balls }} balls)</p>
@@ -70,7 +70,7 @@
             <div class="card-body">
                 <h5 class="card-title">Current Bowler</h5>
                 <p class="card-text">Bowler: {{ bowler }}</p>
-                <p class="card-text">Runs Against: {{ runs_against_bowler.get(bowler, 0) }}</p>
+                <p class="card-text">Runs Against: {{ bowler.runs }}</p>
             </div>
         </div>
     </div>

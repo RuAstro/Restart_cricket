@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from dataclasses import dataclass
 from models import db, Bowler, Balls
+from cricket_objects import BowlerData, BatsmanData, BallData
 from cricket_calculation import (
     calculate_strike_rate,
     calculate_current_run_rate,
@@ -16,6 +16,7 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(message)s",
 )
 
+
 # create the app
 app = Flask(__name__)
 # Secret Key
@@ -29,62 +30,42 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
-batsman1 = {"name": "Batsman 1", "runs": 0, "balls": 0}
-batsman2 = {"name": "Batsman 2", "runs": 0, "balls": 0}
-bowler_name = "Rabada"
-total_runs = 0
+batsman1 = BatsmanData("batsman1")
+batsman2 = BatsmanData("batsman2")
 current_batsman = batsman1
-current_bowler = bowler_name
-batsman_name = batsman1
-runs_against_bowler = {bowler_name: 0}
-total_overs = 0.0
+bowler = BowlerData("Rabada")
+total_runs: int = 0
+total_overs: float = 0
 balls_faced = 0
 total_wickets = 0
 previous_state = None
 
 # Values to reset after each ball
-current_runs = 0
-current_wide_ball = False
-current_no_ball = False
-current_four_runs = False
-current_six_runs = False
-
-
-@dataclass
-class Batsman:
-    name: str
-    runs: int = 0
-    balls: int = 0
-
-
-@dataclass
-class Bowler:
-    name: str
-    runs_conceded: int = 0
-    overs_bowled: float = 0.0
-    wickets_taken: int = 0
-
-    def total_cost(self) -> float:
-        return self.unit_price * self.quantity_on_hand
+current_ball = BallData(bowler=bowler.name, batsman=current_batsman.name)
 
 
 # Route to render the template initially
 @app.route("/")
-def index():
-    global total_runs, total_overs, balls_faced, total_wickets, current_batsman, bowler_name
+def index(
+    batsman1=batsman1,
+    batsman2=batsman2,
+    bowler=bowler,
+    total_runs=total_runs,
+    total_overs=total_overs,
+):
     logging.info("User accessed the cricket scorer page.")
     return render_template(
         "scorer_page.html",
         batsman1=batsman1,
         batsman2=batsman2,
         total_runs=total_runs,
-        current_batsman=current_batsman,
-        bowler=bowler_name,
-        runs_against_bowler=runs_against_bowler,
-        strike_rate_batsman1=calculate_strike_rate(batsman1["runs"], batsman1["balls"]),
-        strike_rate_batsman2=calculate_strike_rate(batsman2["runs"], batsman2["balls"]),
+        current_batsman=batsman1,
+        bowler=bowler.name,
+        runs_against_bowler=bowler.runs_conceded,
+        strike_rate_batsman1=calculate_strike_rate(batsman1.runs, batsman1.balls),
+        strike_rate_batsman2=calculate_strike_rate(batsman2.runs, batsman2.balls),
         current_run_rate=calculate_current_run_rate(
-            balls_faced, total_runs, total_overs
+            current_batsman.balls, total_runs, total_overs
         ),
         total_overs=total_overs,
         total_wickets=total_wickets,
@@ -95,18 +76,16 @@ def index():
 
 # Route to handle adding runs
 @app.route("/add_runs", methods=["POST"])
-def add_runs():
-    global total_runs, current_batsman, total_overs, balls_faced, runs_against_bowler, bowler_name
-
+def add_runs(total_runs=total_runs, current_batsman=current_batsman):
     runs = int(request.form["runs"])
     total_runs += runs
 
     # Update current batsman's runs and balls faced
-    current_batsman["runs"] += runs
-    current_batsman["balls"] += 1
+    current_batsman.runs += runs
+    current_batsman.balls += 1
 
     # Update the total balls faced
-    balls_faced += 1
+    # balls_faced += 1
 
     # Determine which batsman is on strike
     if runs % 2 != 0:
@@ -116,25 +95,23 @@ def add_runs():
 
 
 # Route to handle update bowlers
-@app.route("/update_bowler", methods=["POST"])
-def update_bowler():
-    global bowler_name, runs_against_bowler
-
-    form_bowler_name = request.form.get("bowler", bowler_name)
-    if form_bowler_name != bowler_name:
-        bowler_name = form_bowler_name
-
-    if bowler_name not in runs_against_bowler:
-        runs_against_bowler[bowler_name] = 0
-
-    return redirect(url_for("index"))
+# @app.route("/update_bowler", methods=["POST"])
+# def update_bowler():
+#
+#     form_bowler_name = request.form.get("bowler", bowler_name)
+#     if form_bowler_name != bowler_name:
+#         bowler_name = form_bowler_name
+#
+#     if bowler_name not in runs_against_bowler:
+#         runs_against_bowler[bowler_name] = 0
+#
+#     return redirect(url_for("index"))
+#
 
 
 # Route to handle update overs
 @app.route("/update_overs", methods=["POST"])
-def update_overs():
-    global total_overs
-
+def update_overs(total_overs=total_overs):
     # Increment overs when 6 balls are faced
     if balls_faced > 0 and balls_faced % 6 == 0:
         total_overs += 0.1
@@ -144,8 +121,7 @@ def update_overs():
 
 # Route to handle adding wickets
 @app.route("/add_wicket", methods=["POST"])
-def add_wicket():
-    global total_wickets
+def add_wicket(total_wickets=total_wickets):
     total_wickets += 1
     logging.info("Wicket added.")
     return redirect(url_for("index"))
@@ -153,44 +129,29 @@ def add_wicket():
 
 # Route to handle for next ball
 @app.route("/next_ball", methods=["POST"])
-def next_ball(
-    current_bowler=current_bowler,
-    current_batsman=current_batsman["name"],
-    current_runs=current_runs,
-    current_no_ball=current_no_ball,
-    current_wide_ball=current_wide_ball,
-    current_four_runs=current_four_runs,
-    current_six_runs=current_six_runs,
-):
+def next_ball(current_ball=current_ball):
     # Create a new Balls entry for the current ball
     ball = Balls(
-        bowler=current_bowler,
-        batsman=current_batsman,
-        runs=current_runs,
-        no_ball=current_no_ball,
-        wide_ball=current_wide_ball,
-        four_runs=current_four_runs,
-        six_runs=current_six_runs,
+        bowler=current_ball.bowler,
+        batsman=current_ball.batsman,
+        runs=current_ball.runs,
+        no_ball=current_ball.no_ball,
+        wide_ball=current_ball.wide,
+        four_runs=current_ball.four,
+        six_runs=current_ball.six,
     )
     db.session.add(ball)
     db.session.commit()
 
     # Reset values for the next ball
-    current_bowler = bowler_name
-    current_batsman = batsman_name
-    current_runs = 0
-    current_wide_ball = False
-    current_no_ball = False
-    current_four_runs = False
-    current_six_runs = False
 
+    current_ball.reset()
     return redirect(url_for("index"))
 
 
 # Route to handle undo button
 @app.route("/undo", methods=["POST"])
 def undo():
-
     if previous_state:
         batsman1 = previous_state["batsman1"]
         batsman2 = previous_state["batsman2"]
