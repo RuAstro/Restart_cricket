@@ -156,35 +156,22 @@
     </div>
 
     <!-- Buttons Section -->
-<div class="row mt-3">
-    <div class="col-md-8">
-        <form method="post" action="/add_runs">
-            <div class="btn-group" role="group" aria-label="Runs and Dot Ball">
-                <button type="submit" name="runs" value="1" class="btn btn-outline-primary">1 Run</button>
-                <button type="submit" name="runs" value="2" class="btn btn-outline-primary">2 Runs</button>
-                <button type="submit" name="runs" value="3" class="btn btn-outline-primary">3 Runs</button>
-                <button type="submit" name="runs" value="4" class="btn btn-outline-primary">4 Runs</button>
-                <button type="submit" name="runs" value="5" class="btn btn-outline-primary">5 Runs</button>
-                <button type="submit" name="runs" value="6" class="btn btn-outline-primary">6 Runs</button>
-                <button type="submit" name="runs" value="0" class="btn btn-outline-primary">Dot Ball</button>
-            </div>
-        </form>
-    </div>
-    <div class="col-md-4">
-        <form method="post" action="/add_wicket">
-            <button type="submit" name="wickets" value="1" class="btn btn-danger btn-block">Wicket Taken</button>
-        </form>
+    <div class="row mt-3">
+        <div class="col-md-8">
+            <form method="post" action="/add_runs">
+                    <p class="d-inline-flex gap-1">
+                        <button type="submit" name="runs" value="1" class="btn" data-bs-toggle="button">1 Run</button>
+                        <button type="submit" name="runs" value="2" class="btn" data-bs-toggle="button">2 Run</button>
+                        <button type="submit" name="runs" value="2" class="btn" data-bs-toggle="button">3 Run</button>
+                        <button type="submit" name="runs" value="2" class="btn" data-bs-toggle="button">4 Run</button>
+                        <button type="submit" name="runs" value="2" class="btn" data-bs-toggle="button">5 Run</button>
+                        <button type="submit" name="runs" value="2" class="btn" data-bs-toggle="button">6 Run</button>
+                        <button type="submit" name="runs" value="2" class="btn" data-bs-toggle="button">No Run</button>
+                        <button type="submit" name="runs" value="2" class="btn" data-bs-toggle="button">Wide Run</button>
+                        <button type="submit" name="runs" value="2" class="btn" data-bs-toggle="button">No Ball</button>
+                    </p>
 
-        <form method="post" action="/add_runs" class="mt-2">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Wide Ball
-              </button>
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                No Ball
-              </button>
-        </form>
-    </div>
-</div>
+
 <div class="col-md-10">
     <form method="post" action="/next_ball">
         <button type="submit" name="Next Ball" value="Continue" class="btn btn-info btn-block">Confirm Input</button>
