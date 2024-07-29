@@ -76,7 +76,9 @@ def index(
 
 # Route to handle adding runs
 @app.route("/add_runs", methods=["POST"])
-def add_runs(total_runs=total_runs, current_batsman=current_batsman):
+def add_runs(
+    total_runs=total_runs, current_batsman=current_batsman, current_ball=current_ball
+):
     runs = int(request.form["runs"])
     total_runs += runs
 
@@ -84,8 +86,8 @@ def add_runs(total_runs=total_runs, current_batsman=current_batsman):
     current_batsman.runs += runs
     current_batsman.balls += 1
 
-    # Update the total balls faced
-    # balls_faced += 1
+    current_ball.runs = runs
+    current_ball.batsman = current_batsman.name
 
     # Determine which batsman is on strike
     if runs % 2 != 0:
@@ -130,6 +132,10 @@ def add_wicket(total_wickets=total_wickets):
 # Route to handle for next ball
 @app.route("/next_ball", methods=["POST"])
 def next_ball(current_ball=current_ball):
+    current_ball.wide = bool(request.form["wide"])
+    current_ball.no_ball = bool(request.form["no_ball"])
+    current_ball.four = bool(request.form["four"])
+    current_ball.six = bool(request.form["six"])
     # Create a new Balls entry for the current ball
     ball = Balls(
         bowler=current_ball.bowler,
