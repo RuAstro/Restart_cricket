@@ -61,71 +61,57 @@
         </div>
     </div>
 
-
-<!-- Bowler Section -->
-
-<div class="row mt-4">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Current Bowler</h5>
-                <p class="card-text">Bowler: {{ bowler }}</p>
-                <p class="card-text">Runs Against: {{ bowler.runs }}</p>
+    <!-- Bowler Section -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Current Bowler</h5>
+                    <p class="card-text">Bowler: {{ bowler }}</p>
+                    <p class="card-text">Runs Against: {{ bowler.runs }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Select Next Bowler</h5>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#selectNextBowlerModal">
+                        Select Next Bowler
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="selectNextBowlerModal" tabindex="-1" aria-labelledby="selectNextBowlerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="selectNextBowlerModalLabel">Select Next Bowler</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="Bowler1" id="Bowler1">
+                                <label class="form-check-label" for="Bowler1">Bowler1</label>
+                            </li>
+                            <li class="list-group-item">
+                                <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="Bowler2" id="Bowler2">
+                                <label class="form-check-label" for="Bowler2">Bowler2</label>
+                            </li>
+                            <!-- Add more bowlers here -->
+                        </ul>
+                        <p>Choose your next bowler.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-<!-- Button to launch modal for selecting next bowler -->
-<div class="col-md-6">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Select Next Bowler</h5>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#selectNextBowlerModal">
-                Select Next Bowler
-            </button>                
-        </div>
-    </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="selectNextBowlerModal" tabindex="-1" aria-labelledby="selectNextBowlerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="selectNextBowlerModalLabel">Select Next Bowler</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <ul class="list-group">
-                    <li class="list-group-item">
-                      <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="Bowler1">
-                      <label class="form-check-label" for="firstRadio">Bowler1</label>
-                    </li>
-                    <li class="list-group-item">
-                      <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="Bowler2">
-                      <label class="form-check-label" for="secondRadio">Bowler2</label>
-                    </li>
-                    <li class="list-group-item">
-                      <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="Bowler3">
-                      <label class="form-check-label" for="thirdRadio">Bowler 3</label>
-                    </li>
-                    <li class="list-group-item">
-                        <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="Bowler4">
-                        <label class="form-check-label" for="forthRadio">Bowler4</label>
-                    </li>
-                    <li class="list-group-item">
-                        <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="Bowler5">
-                        <label class="form-check-label" for="fithRadio">Bowler5</label>
-                      </li>
-                  </ul>
-                <p>Choose your next bowler.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
 
     <!-- Scoreboard Section -->
     <div class="row mt-4">
@@ -155,45 +141,48 @@
         </div>
     </div>
 
-    <!-- Buttons Section -->
+    <!-- Run Selection and Confirmation Section -->
     <div class="row mt-3">
         <div class="col-md-8">
-            <form method="post" action="/add_runs">
-                    <p class="d-inline-flex gap-1">
-                        <button type="submit" name="runs" value="1" class="btn" data-bs-toggle="button">1 Run</button>
-                        <button type="submit" name="runs" value="2" class="btn" data-bs-toggle="button">2 Run</button>
-                        <button type="submit" name="runs" value="3" class="btn" data-bs-toggle="button">3 Run</button>
-                        <button type="submit" name="runs" value="4" class="btn" data-bs-toggle="button">4 Run</button>
-                        <button type="submit" name="runs" value="5" class="btn" data-bs-toggle="button">5 Run</button>
-                        <button type="submit" name="runs" value="6" class="btn" data-bs-toggle="button">6 Run</button>
-                        <button type="submit" name="runs" value="0" class="btn" data-bs-toggle="button">No Run</button>
-                        <button type="submit" name="runs" value="1" class="btn" data-bs-toggle="button">Wide Ball</button>
-                        <button type="submit" name="runs" value="1" class="btn" data-bs-toggle="button">No Ball</button>
-                    </p>
-                </form>
-            </div>
+            <form method="post" action="/add_runs" id="runForm">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        Select Runs
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="#" data-value="1">1 Run</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="2">2 Runs</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="3">3 Runs</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="4">4 Runs</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="6">6 Runs</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="0">No Run</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="wide_ball">Wide Ball</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="no_ball">No Ball</a></li>
+                    </ul>
+                </div>
+                <input type="hidden" id="runValue" name="runs" value="0">
+                <button type="submit" class="btn btn-outline-success mt-2">Confirm</button>
+            </form>
         </div>
-
-        <form method="post" action="/next_ball">
-            <input type="hidden" name="wide" value="{{ request.form.get("wide", "False") }}">
-            <input type="hidden" name="no_ball" value="{{ request.form.get("no_ball", "False") }}">
-            <input type="hidden" name="four" value="{{ request.form.get("four", "False") }}">
-            <input type="hidden" name="six" value="{{ request.form.get("six", "False") }}">
-            <button type="submit" class="btn btn-outline-success">Confirm</button>
-        </form>
-
-<div class="col-md-10">
-    <form method="post" action="/add_wicket">
-        <button type="submit" name="wickets" value="1" class="btn btn-outline-danger">Wicket Taken</button>
-    </form>
-
-<!-- Undo Button -->
-    <div class="row md-10">
-        <form method="post" action="/undo">
-            <button type="button" name="Undo" value="Undo" class="btn btn-outline-warning">Undo Last Action</button>
-        </form>
     </div>
-    
+
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <form method="post" action="/add_wicket">
+                <button type="submit" class="btn btn-outline-danger">Wicket Taken</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Undo Button -->
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <form method="post" action="/undo">
+                <button type="button" class="btn btn-outline-warning">Undo Last Action</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Additional Stats Section -->
     <div class="row mt-4">
         <div class="col-md-4">
@@ -222,6 +211,20 @@
         </div>
     </div>
 </div>
- 
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdownItems = document.querySelectorAll(".dropdown-item");
+        const runValueInput = document.getElementById("runValue");
+        const dropdownButton = document.getElementById("dropdownMenuButton");
+    
+        dropdownItems.forEach(item => {
+            item.addEventListener("click", function () {
+                runValueInput.value = this.getAttribute("data-value");
+                dropdownButton.innerText = this.innerText;
+            });
+        });
+    });
+    </script>
 
 {% endblock %}
