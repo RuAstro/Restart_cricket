@@ -100,7 +100,6 @@
                                 <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="Bowler2" id="Bowler2">
                                 <label class="form-check-label" for="Bowler2">Bowler2</label>
                             </li>
-                            <!-- Add more bowlers here -->
                         </ul>
                         <p>Choose your next bowler.</p>
                     </div>
@@ -145,31 +144,36 @@
     <div class="row mt-3">
         <div class="col-md-8">
             <form method="post" action="/add_runs" id="runForm">
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                <!-- Runs Dropdown -->
+                <div class="dropdown mb-2">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="runsDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
                         Select Runs
                     </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <ul class="dropdown-menu" aria-labelledby="runsDropdownButton">
                         <li><a class="dropdown-item" href="#" data-value="1">1 Run</a></li>
                         <li><a class="dropdown-item" href="#" data-value="2">2 Runs</a></li>
                         <li><a class="dropdown-item" href="#" data-value="3">3 Runs</a></li>
                         <li><a class="dropdown-item" href="#" data-value="4">4 Runs</a></li>
                         <li><a class="dropdown-item" href="#" data-value="6">6 Runs</a></li>
-                        <li><a class="dropdown-item" href="#" data-value="0">No Run</a></li>
-                        <li><a class="dropdown-item" href="#" data-value="wide_ball">Wide Ball</a></li>
-                        <li><a class="dropdown-item" href="#" data-value="no_ball">No Ball</a></li>
                     </ul>
                 </div>
+    
+                <!-- Special Deliveries Dropdown -->
+                <div class="dropdown mb-2">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="specialDeliveriesDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        Special Deliveries
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="specialDeliveriesDropdownButton">
+                        <li><a class="dropdown-item" href="#" data-value="0" data-type="wide">Wide Ball</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="0" data-type="no-ball">No Ball</a></li>
+                        <li><a class="dropdown-item" href="#" data-value="0" data-type="no-run">No Run</a></li>
+                    </ul>
+                </div>
+    
                 <input type="hidden" id="runValue" name="runs" value="0">
+                <input type="hidden" id="deliveryType" name="delivery_type" value="run">
+    
                 <button type="submit" class="btn btn-outline-success mt-2">Confirm</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="row mt-3">
-        <div class="col-md-12">
-            <form method="post" action="/add_wicket">
-                <button type="submit" class="btn btn-outline-danger">Wicket Taken</button>
             </form>
         </div>
     </div>
@@ -213,18 +217,20 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const dropdownItems = document.querySelectorAll(".dropdown-item");
-        const runValueInput = document.getElementById("runValue");
-        const dropdownButton = document.getElementById("dropdownMenuButton");
-    
-        dropdownItems.forEach(item => {
-            item.addEventListener("click", function () {
-                runValueInput.value = this.getAttribute("data-value");
-                dropdownButton.innerText = this.innerText;
-            });
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+        item.addEventListener('click', function(event) {
+            const value = this.getAttribute('data-value');
+            const type = this.getAttribute('data-type');
+            
+            if (type) {
+                document.getElementById('runValue').value = value;
+                document.getElementById('deliveryType').value = type;
+            } else {
+                document.getElementById('runValue').value = value;
+                document.getElementById('deliveryType').value = 'run';
+            }
         });
     });
-    </script>
+</script>
 
 {% endblock %}
