@@ -90,13 +90,13 @@ def index():
 def add_runs():
     # Extract data from the form
     runs = int(request.form.get("runs", 0))
-    delivery_type = request.form.get("delivery_type", "run")
+    delivery_type = request.form.get("delivery_type", "foul_ball")
 
     # Initialize ball parameters
     no_ball = delivery_type == "no-ball"
     wide_ball = delivery_type == "wide"
-    four_runs = runs == 4
-    six_runs = runs == 6
+    four_runs = delivery_type == "four_run"
+    six_runs = delivery_type == "six_run"
 
     current_ball.runs = runs
     current_ball.no_ball = no_ball
