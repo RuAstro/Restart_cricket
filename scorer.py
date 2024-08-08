@@ -88,9 +88,8 @@ def index():
 # Route to handle adding runs
 @app.route("/add_runs", methods=["POST"])
 def add_runs():
-    # Extract data from the form
     runs = int(request.form.get("runs", 0))
-    delivery_type = request.form.get("delivery_type", "foul_ball")
+    delivery_type = request.form.get("delivery_type", "normal")
 
     # Initialize ball parameters
     no_ball = delivery_type == "no-ball"
@@ -98,13 +97,22 @@ def add_runs():
     four_runs = delivery_type == "four_run"
     six_runs = delivery_type == "six_run"
 
-    current_ball.runs = runs
+    # Calculate total runs including runs for special deliveries
+    total_runs_to_add = runs
+    if wide_ball or no_ball:
+        total_runs_to_add += runs  # Special deliveries contribute runs as well
+
+    # Log incoming data
+    app.logger.info(
+        f"Received runs: {runs}, delivery_type: {delivery_type}, total_runs_to_add: {total_runs_to_add}"
+    )
+
+    current_ball.runs = total_runs_to_add
     current_ball.no_ball = no_ball
     current_ball.wide = wide_ball
     current_ball.four = four_runs
     current_ball.six = six_runs
 
-    # Create a new Balls entry for the current ball
     ball = Balls(
         bowler=current_ball.bowler,
         batsman=current_ball.batsman,
