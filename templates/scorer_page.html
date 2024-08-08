@@ -226,17 +226,29 @@
 </div>
 
 <script>
-    // JavaScript to handle dropdown selections
-    document.querySelectorAll('.dropdown-item').forEach(item => {
-        item.addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent default anchor behavior
-            
-            const value = this.getAttribute('data-value');
-            const type = this.getAttribute('data-type');
-            
-            // Set the hidden inputs based on the selected item
-            document.getElementById('runValue').value = value;
-            document.getElementById('deliveryType').value = type;
+    document.addEventListener("DOMContentLoaded", function() {
+        // Handle runs dropdown
+        document.querySelectorAll("#runsDropdownButton + .dropdown-menu .dropdown-item").forEach(item => {
+            item.addEventListener("click", function(event) {
+                event.preventDefault();
+                const value = this.getAttribute("data-value");
+                const type = this.getAttribute("data-type");
+                document.getElementById("runValue").value = value;
+                document.getElementById("deliveryType").value = type;
+                document.getElementById("runsDropdownButton").textContent = this.textContent;
+            });
+        });
+
+        // Handle special deliveries dropdown
+        document.querySelectorAll("#specialDeliveriesDropdownButton + .dropdown-menu .dropdown-item").forEach(item => {
+            item.addEventListener("click", function(event) {
+                event.preventDefault();
+                const value = this.getAttribute("data-value");
+                const type = this.getAttribute("data-type");
+                document.getElementById("runValue").value = value;
+                document.getElementById("deliveryType").value = type;
+                document.getElementById("specialDeliveriesDropdownButton").textContent = this.textContent;
+            });
         });
     });
 </script>
