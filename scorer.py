@@ -49,7 +49,7 @@ current_ball = BallData(bowler=bowler.name, batsman=current_batsman.name)
 def index():
     # Fetch total runs, wickets, and overs
     total_runs = db.session.query(db.func.sum(Balls.runs)).scalar() or 0
-    total_wickets = db.session.query(db.func.count(Balls.id)).scalar() or 0
+    total_wickets = db.session.query(db.func.sum(Balls.wicket_taken)).scalar() or 0
 
     # Fetch current bowler
     bowler = Bowler.query.first()
@@ -100,7 +100,7 @@ def add_runs():
     # Calculate total runs including runs for special deliveries
     total_runs_to_add = runs
     if wide_ball or no_ball:
-        total_runs_to_add += runs  # Special deliveries contribute runs as well
+        total_runs_to_add += runs
 
     # Log incoming data
     app.logger.info(
@@ -143,17 +143,11 @@ def update_overs(total_overs=total_overs):
 
 # Route to handle adding wickets
 @app.route("/add_wicket", methods=["POST"])
-def add_wicket():
-    # Fetch and update the total wickets
-    total_wickets = (
-        db.session.query(db.func.count(Balls.id)).scalar() or 0
-    )  # Adjust if you track wickets differently
-    total_wickets += 1
+def add_wicket(current_ball=current_ball):
     # Save the updated total wickets to your database or session as needed
-
+    current_ball.wicket_taken = True
     # Log the addition of the wicket
     logging.info("Wicket added.")
-
     # Redirect back to the index page
     return redirect(url_for("index"))
 
@@ -165,6 +159,7 @@ def next_ball(current_ball=current_ball):
     current_ball.no_ball = bool(request.form["no_ball"])
     current_ball.four = bool(request.form["four"])
     current_ball.six = bool(request.form["six"])
+    current_ball.wicket = int(request.form["wicket"])
     # Create a new Balls entry for the current ball
     ball = Balls(
         bowler=current_ball.bowler,
@@ -174,6 +169,7 @@ def next_ball(current_ball=current_ball):
         wide_ball=current_ball.wide,
         four_runs=current_ball.four,
         six_runs=current_ball.six,
+        add_wicket=current_ball.wicket,
     )
     db.session.add(ball)
     db.session.commit()
