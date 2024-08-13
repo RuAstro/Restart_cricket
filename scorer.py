@@ -49,7 +49,8 @@ current_ball = BallData(bowler=bowler.name, batsman=current_batsman.name)
 def index():
     # Fetch total runs, wickets, and overs
     total_runs = db.session.query(db.func.sum(Balls.runs)).scalar() or 0
-    total_wickets = db.session.query(db.func.sum(Balls.wicket_taken)).scalar() or 0
+    # total_wickets = db.session.query(db.func.count(Balls.wicket_taken)).scalar()
+    # total_overs = db.session.query(db.func.count(Balls.overs)).scalar()
 
     # Fetch current bowler
     bowler = Bowler.query.first()
@@ -92,7 +93,7 @@ def add_runs():
     delivery_type = request.form.get("delivery_type", "normal")
 
     # Initialize ball parameters
-    no_ball = delivery_type == "no-ball"
+    no_ball = delivery_type == "no_ball"
     wide_ball = delivery_type == "wide"
     four_runs = delivery_type == "four_run"
     six_runs = delivery_type == "six_run"
@@ -144,22 +145,43 @@ def update_overs(total_overs=total_overs):
 # Route to handle adding wickets
 @app.route("/add_wicket", methods=["POST"])
 def add_wicket(current_ball=current_ball):
-    # Save the updated total wickets to your database or session as needed
+    total_wickets = db.session.query(db.func.count(Balls.wicket_taken)).scalar()
     current_ball.wicket_taken = True
     # Log the addition of the wicket
-    logging.info("Wicket added.")
-    # Redirect back to the index page
+    total_wickets += 1
+
+    # Create a new ball record with wicket taken
+    current_ball.wicket_taken = True
+    ball = Balls(
+        bowler=current_ball.bowler,
+        batsman=current_ball.batsman,
+        runs=current_ball.runs,
+        no_ball=current_ball.no_ball,
+        wide_ball=current_ball.wide,
+        four_runs=current_ball.four,
+        six_runs=current_ball.six,
+        wicket_taken=current_ball.wicket_taken,
+    )
+    db.session.add(ball)
+    db.session.commit()
+
+    # Reset values for the next ball
+    current_ball.reset()
+
     return redirect(url_for("index"))
 
 
 # Route to handle for next ball
 @app.route("/next_ball", methods=["POST"])
-def next_ball(current_ball=current_ball):
-    current_ball.wide = bool(request.form["wide"])
-    current_ball.no_ball = bool(request.form["no_ball"])
-    current_ball.four = bool(request.form["four"])
-    current_ball.six = bool(request.form["six"])
-    current_ball.wicket = int(request.form["wicket"])
+def next_ball():
+    current_ball.wide = bool(request.form.get("wide"))
+    current_ball.no_ball = bool(request.form.get("no_ball"))
+    current_ball.four = bool(request.form.get("four"))
+    current_ball.six = bool(request.form.get("six"))
+    current_ball.wicket_taken = bool(
+        request.form.get("wicket")
+    )  # Make sure this matches your data type
+
     # Create a new Balls entry for the current ball
     ball = Balls(
         bowler=current_ball.bowler,
@@ -169,14 +191,14 @@ def next_ball(current_ball=current_ball):
         wide_ball=current_ball.wide,
         four_runs=current_ball.four,
         six_runs=current_ball.six,
-        add_wicket=current_ball.wicket,
+        wicket_taken=current_ball.wicket_taken,
     )
     db.session.add(ball)
     db.session.commit()
 
     # Reset values for the next ball
-
     current_ball.reset()
+
     return redirect(url_for("index"))
 
 
