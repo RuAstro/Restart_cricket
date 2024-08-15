@@ -10,13 +10,16 @@ class BallData:
     six: bool = False
     wide: bool = False
     no_ball: bool = False
+    wicket_taken: bool = False
 
     def reset(self):
+        """Reset ball data for the next delivery."""
         self.runs = 0
         self.four = False
         self.six = False
         self.wide = False
         self.no_ball = False
+        self.wicket_taken = False
 
 
 @dataclass
