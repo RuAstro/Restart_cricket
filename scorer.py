@@ -99,7 +99,7 @@ def add_runs(current_ball=current_ball):
     current_ball.no_ball = delivery_type == "no_ball"
     current_ball.wide = delivery_type == "wide"
 
-    return redirect(url_for("next_ball"))
+    return next_ball(current_ball)
 
 
 # Route to handle update overs
