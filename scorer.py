@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from models import db, Bowler, Balls
+from models import db, Bowler, Balls, GameStats
 from cricket_objects import BowlerData, BatsmanData, BallData
 from cricket_calculation import (
     calculate_strike_rate,
@@ -50,7 +50,14 @@ def index():
     # Fetch total runs, wickets, and overs
     total_runs = db.session.query(db.func.sum(Balls.runs)).scalar() or 0
     total_wickets = Balls.query.filter(Balls.wicket_taken == 1).count()
-    # total_overs = db.session.query(db.func.count(Balls.overs)).scalar()
+    # total_overs = Balls.query.filter(Balls.overs == 0.1).count()
+
+    # Fetch total overs from GameStats
+    game_stats = GameStats.query.first()
+    total_overs = game_stats.total_overs if game_stats else 0
+
+    # batsman1 = batsman1.query.filter(name="batsman1").first()
+    # batsman2 = batsman2.query.filter(name="batsman2").first()
 
     # Fetch current bowler
     bowler = Bowler.query.first()
@@ -151,9 +158,28 @@ def next_ball(current_ball=current_ball):
         wicket_taken=current_ball.wicket_taken,
     )
     db.session.add(ball)
+
+    # Fetch or create the GameStats record
+    game_stats = GameStats.query.first()
+    if game_stats is None:
+        game_stats = GameStats()
+        db.session.add(game_stats)
+
+    # Update balls faced and total overs
+    if game_stats.balls_faced is None:
+        game_stats.balls_faced = 0
+    if game_stats.total_overs is None:
+        game_stats.total_overs = 0.0
+
+    game_stats.balls_faced += 1
+
+    # Update total overs based on balls faced
+    if game_stats.balls_faced % 6 == 0:
+        game_stats.total_overs += 0.1
+
     db.session.commit()
 
-    # Reset values for the next ball
+    # Reset current ball
     current_ball.reset()
 
     return redirect(url_for("index"))

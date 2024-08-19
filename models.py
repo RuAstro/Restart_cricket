@@ -19,3 +19,10 @@ class Balls(db.Model):
     four_runs = db.Column(db.Boolean, default=False)
     six_runs = db.Column(db.Boolean, default=False)
     wicket_taken = db.Column(db.Boolean, default=False)
+    # overs = db.Column(db.Float, default=0.0)
+
+
+class GameStats(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    total_overs = db.Column(db.Float, default=0.0)
+    balls_faced = db.Column(db.Integer, default=0)
