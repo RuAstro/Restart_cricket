@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from models import db, Bowler, Balls, GameStats
+from models import db, Bowler, Balls
 from cricket_objects import BowlerData, BatsmanData, BallData
 from cricket_calculation import (
     calculate_strike_rate,
@@ -50,31 +50,11 @@ def index():
     # Fetch total runs, wickets, and overs
     total_runs = db.session.query(db.func.sum(Balls.runs)).scalar() or 0
     total_wickets = Balls.query.filter(Balls.wicket_taken == 1).count()
-    # total_overs = Balls.query.filter(Balls.overs == 0.1).count()
-
-    # Fetch total overs from GameStats
-    game_stats = GameStats.query.first()
-    total_overs = game_stats.total_overs if game_stats else 0
-
-    # batsman1 = batsman1.query.filter(name="batsman1").first()
-    # batsman2 = batsman2.query.filter(name="batsman2").first()
+    total_balls = Balls.query.count()
+    total_overs = (total_balls // 6) + (total_balls % 6) / 10
 
     # Fetch current bowler
     bowler = Bowler.query.first()
-
-    # Compute strike rates
-    strike_rate_batsman1 = (
-        (batsman1.runs / batsman1.balls * 100) if batsman1.balls > 0 else 0
-    )
-    strike_rate_batsman2 = (
-        (batsman2.runs / batsman2.balls * 100) if batsman2.balls > 0 else 0
-    )
-
-    # Compute other stats
-    current_run_rate = total_runs / total_overs if total_overs > 0 else 0
-    required_run_rate = 0
-
-    inning = "1st Innings"
 
     # Render the template with all the required variables
     return render_template(
@@ -85,11 +65,10 @@ def index():
         total_wickets=total_wickets,
         total_overs=total_overs,
         bowler=bowler,
-        strike_rate_batsman1=strike_rate_batsman1,
-        strike_rate_batsman2=strike_rate_batsman2,
-        current_run_rate=current_run_rate,
-        required_run_rate=required_run_rate,
-        inning=inning,
+        calculate_strike_rate=calculate_strike_rate,
+        calculate_current_run_rate=calculate_current_run_rate,
+        # calculate_required_run_rate=calculate_required_run_rate,
+        is_inning_over=is_inning_over,
     )
 
 
@@ -107,16 +86,6 @@ def add_runs(current_ball=current_ball):
     current_ball.wide = delivery_type == "wide"
 
     return next_ball(current_ball)
-
-
-# Route to handle update overs
-@app.route("/update_overs", methods=["POST"])
-def update_overs(total_overs=total_overs):
-    # Increment overs when 6 balls are faced
-    if balls_faced > 0 and balls_faced % 6 == 0:
-        total_overs += 0.1
-
-    return redirect(url_for("index"))
 
 
 # Route to handle adding wickets
@@ -158,24 +127,6 @@ def next_ball(current_ball=current_ball):
         wicket_taken=current_ball.wicket_taken,
     )
     db.session.add(ball)
-
-    # Fetch or create the GameStats record
-    game_stats = GameStats.query.first()
-    if game_stats is None:
-        game_stats = GameStats()
-        db.session.add(game_stats)
-
-    # Update balls faced and total overs
-    if game_stats.balls_faced is None:
-        game_stats.balls_faced = 0
-    if game_stats.total_overs is None:
-        game_stats.total_overs = 0.0
-
-    game_stats.balls_faced += 1
-
-    # Update total overs based on balls faced
-    if game_stats.balls_faced % 6 == 0:
-        game_stats.total_overs += 0.1
 
     db.session.commit()
 
