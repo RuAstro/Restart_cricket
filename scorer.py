@@ -53,14 +53,33 @@ def index():
     total_balls = Balls.query.count()
     total_overs = (total_balls // 6) + (total_balls % 6) / 10
 
+    # Fetch batsman details
+    batsman1_data = Balls.query.filter(Balls.batsman == batsman1.name).all()
+    batsman2_data = Balls.query.filter(Balls.batsman == batsman2.name).all()
+
+    # Calculate runs and balls faced for each batsman
+    batsman1_runs = sum(ball.runs for ball in batsman1_data)
+    batsman1_balls = len(batsman1_data)
+
+    batsman2_runs = sum(ball.runs for ball in batsman2_data)
+    batsman2_balls = len(batsman2_data)
+
     # Fetch current bowler
     bowler = Bowler.query.first()
 
     # Render the template with all the required variables
     return render_template(
         "scorer_page.html",
-        batsman1=batsman1,
-        batsman2=batsman2,
+        batsman1={
+            "name": batsman1.name,
+            "runs": batsman1_runs,
+            "balls": batsman1_balls,
+        },
+        batsman2={
+            "name": batsman2.name,
+            "runs": batsman2_runs,
+            "balls": batsman2_balls,
+        },
         total_runs=total_runs,
         total_wickets=total_wickets,
         total_overs=total_overs,
