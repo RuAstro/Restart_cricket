@@ -63,6 +63,11 @@ def index():
     batsman2_runs = sum(ball.runs for ball in batsman2_data)
     batsman2_balls = len(batsman2_data)
 
+    # Determine which batsman is on strike
+    current_batsman = (
+        batsman1.name if current_ball.batsman == batsman1.name else batsman2.name
+    )
+
     # Fetch current bowler
     # bowler = Bowler.query.first()
 
@@ -83,6 +88,7 @@ def index():
         total_wickets=total_wickets,
         total_overs=total_overs,
         bowler=bowler,
+        current_batsman=current_batsman,
         calculate_strike_rate=calculate_strike_rate,
         calculate_current_run_rate=calculate_current_run_rate,
         # calculate_required_run_rate=calculate_required_run_rate,
@@ -132,10 +138,6 @@ def next_ball(current_ball=current_ball):
     total_runs_to_add = runs
     if wide_ball or no_ball:
         total_runs_to_add += runs
-
-    # Switch batsmen if odd runs
-    # if runs % 2 != 0:
-    #     batsman1, batsman2 = batsman2, batsman1
 
     # Create a new Balls entry for the current ball
     ball = Balls(
