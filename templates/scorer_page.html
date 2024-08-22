@@ -32,6 +32,10 @@
         font-size: 1rem;
         margin-bottom: 10px;
     }
+    .current-strike {
+        border: 2px solid #007bff;
+        background-color: #e7f0ff;
+    }
 </style>
 {% endblock %}
 
@@ -40,26 +44,32 @@
     <h1 class="mb-4 text-center">Cricket Scorer</h1>
 
     <!-- Batsmen Section -->
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card {% if current_batsman == batsman1 %}border-primary shadow{% endif %}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ batsman1.name }}</h5>
-                    <p class="card-text" id="batsman1-runs">{{ batsman1.runs }} ({{ batsman1.balls }} balls)</p>
-                    <p class="card-text" id="batsman1-strike-rate">Strike Rate: {{ strike_rate_batsman1 }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card {% if current_batsman == batsman2 %}border-primary shadow{% endif %}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ batsman2.name }}</h5>
-                    <p class="card-text" id="batsman2-runs">{{ batsman2.runs }} ({{ batsman2.balls }} balls)</p>
-                    <p class="card-text" id="batsman2-strike-rate">Strike Rate: {{ strike_rate_batsman2 }}</p>
-                </div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card {% if current_batsman == batsman1 %}current-strike{% endif %}">
+            <div class="card-body">
+                <h5 class="card-title">{{ batsman1.name }}</h5>
+                <p class="card-text" id="batsman1-runs">{{ batsman1.runs }} ({{ batsman1.balls }} balls)</p>
+                <!-- Calculate and display the strike rate -->
+                <p class="card-text" id="batsman1-strike-rate">
+                    Strike Rate: {{ calculate_strike_rate(batsman1.runs, batsman1.balls) }}
+                </p>
             </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="card {% if current_batsman == batsman2 %}current-strike{% endif %}">
+            <div class="card-body">
+                <h5 class="card-title">{{ batsman2.name }}</h5>
+                <p class="card-text" id="batsman2-runs">{{ batsman2.runs }} ({{ batsman2.balls }} balls)</p>
+                <!-- Calculate and display the strike rate -->
+                <p class="card-text" id="batsman2-strike-rate">
+                    Strike Rate: {{ calculate_strike_rate(batsman2.runs, batsman2.balls) }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- Bowler Section -->
     <div class="row mt-4">

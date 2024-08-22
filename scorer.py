@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from models import db, Bowler, Balls
+from models import db, Balls
 from cricket_objects import BowlerData, BatsmanData, BallData
 from cricket_calculation import (
     calculate_strike_rate,
@@ -65,7 +65,7 @@ def index():
     batsman2_balls = len(batsman2_data)
 
     # Fetch current bowler
-    bowler = Bowler.query.first()
+    # bowler = Bowler.query.first()
 
     # Render the template with all the required variables
     return render_template(
@@ -134,6 +134,10 @@ def next_ball(current_ball=current_ball):
     if wide_ball or no_ball:
         total_runs_to_add += runs
 
+    # Switch batsmen if odd runs
+    # if runs % 2 != 0:
+    #     batsman1, batsman2 = batsman2, batsman1
+
     # Create a new Balls entry for the current ball
     ball = Balls(
         bowler=current_ball.bowler,
@@ -146,9 +150,7 @@ def next_ball(current_ball=current_ball):
         wicket_taken=current_ball.wicket_taken,
     )
     db.session.add(ball)
-
     db.session.commit()
-
     # Reset current ball
     current_ball.reset()
 
