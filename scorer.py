@@ -32,7 +32,6 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 batsman1 = BatsmanData("batsman1")
 batsman2 = BatsmanData("batsman2")
-current_batsman = batsman1
 bowler = BowlerData("Rabada")
 total_runs: int = 0
 total_overs: float = 0
@@ -41,7 +40,7 @@ total_wickets = 0
 previous_state = None
 
 # Values to reset after each ball
-current_ball = BallData(bowler=bowler.name, batsman=current_batsman.name)
+current_ball = BallData(bowler=bowler.name, batsman=batsman1.name)
 
 
 # Route to render the template initially
@@ -151,6 +150,13 @@ def next_ball(current_ball=current_ball):
     )
     db.session.add(ball)
     db.session.commit()
+    # Calculate next batsman
+    if current_ball.runs % 2 != 0:
+        if current_ball.batsman == batsman1.name:
+            current_ball.batsman = batsman2.name
+        else:
+            current_ball.batsman = batsman1.name
+
     # Reset current ball
     current_ball.reset()
 
