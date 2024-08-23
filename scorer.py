@@ -43,6 +43,30 @@ previous_state = None
 current_ball = BallData(bowler=bowler.name, batsman=batsman1.name)
 
 
+@app.route("/set_bowler", methods=["POST"])
+def set_bowler():
+    name = request.form.get("name")
+    if name:
+        bowler = Bowler.query.first()
+        if bowler:
+            bowler.name = name
+        else:
+            bowler = Bowler(name=name)
+            db.session.add(bowler)
+        db.session.commit()
+        return redirect(url_for("index"))
+    return "Invalid name", 400
+
+
+# Fetch bowler data
+@app.route("/get_bowler", methods=["GET"])
+def get_bowler():
+    bowler = Bowler.query.first()
+    if bowler:
+        return {"name": bowler.name}
+    return {"name": None}
+
+
 # Route to render the template initially
 @app.route("/")
 def index():
