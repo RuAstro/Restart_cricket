@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from models import db, Balls
+from models import db, Balls, Bowler
 from cricket_objects import BowlerData, BatsmanData, BallData
 from cricket_calculation import (
     calculate_strike_rate,
@@ -32,7 +32,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 batsman1 = BatsmanData("batsman1")
 batsman2 = BatsmanData("batsman2")
-bowler = BowlerData("Rabada")
+bowler = BowlerData("bowler1")
 total_runs: int = 0
 total_overs: float = 0
 balls_faced = 0
@@ -69,7 +69,12 @@ def index():
     )
 
     # Fetch current bowler
-    # bowler = Bowler.query.first()
+    bowler_data = Balls.query.filter(Balls.bowler == bowler.name).all()
+
+    bowler_runs = sum(ball.runs for ball in bowler_data)
+    bowler_runs = len(bowler_data)
+
+    bowler_balls = len(bowler_data)
 
     # Render the template with all the required variables
     return render_template(
@@ -84,10 +89,15 @@ def index():
             "runs": batsman2_runs,
             "balls": batsman2_balls,
         },
+        bowler={
+            "name": bowler.name,
+            "runs": bowler_runs,
+            "balls": bowler_balls,
+        },
         total_runs=total_runs,
         total_wickets=total_wickets,
         total_overs=total_overs,
-        bowler=bowler,
+        #    bowler=bowler,
         current_batsman=current_batsman,
         calculate_strike_rate=calculate_strike_rate,
         calculate_current_run_rate=calculate_current_run_rate,
