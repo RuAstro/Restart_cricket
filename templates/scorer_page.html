@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Cricket Scorer</title>
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .card {
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .card-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+    .card-body {
+        padding: 15px;
+    }
+    .btn {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+    .card-border-primary {
+        border: 1px solid #007bff; /* Bootstrap primary color */
+    }
+    .card-shadow {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Example shadow */
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">Cricket Scorer</h1>
+
+    <!-- Batsmen Section -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card {% if current_batsman == batsman1.name %}border-primary shadow{% endif %}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ batsman1.name }}</h5>
+                    <p class="card-text" id="batsman1-runs">{{ batsman1.runs }} ({{ batsman1.balls }} balls)</p>
+                    <p class="card-text" id="batsman1-strike-rate">
+                        Strike Rate: {{ calculate_strike_rate(batsman1.runs, batsman1.balls) }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card {% if current_batsman == batsman2.name %}border-primary shadow{% endif %}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ batsman2.name }}</h5>
+                    <p class="card-text" id="batsman2-runs">{{ batsman2.runs }} ({{ batsman2.balls }} balls)</p>
+                    <p class="card-text" id="batsman2-strike-rate">
+                        Strike Rate: {{ calculate_strike_rate(batsman2.runs, batsman2.balls) }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bowler Section -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Current Bowler</h5>
+                    <p class="card-text">Bowler: {{ bowler.name }}</p>
+                    <p class="card-text">Runs Against: {{ bowler.runs }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Select Next Bowler</h5>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#selectNextBowlerModal">
+                        Select Next Bowler
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="selectNextBowlerModal" tabindex="-1" aria-labelledby="selectNextBowlerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="selectNextBowlerModalLabel">Select Next Bowler</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="Bowler1" id="Bowler1">
+                                <label class="form-check-label" for="Bowler1">Bowler1</label>
+                            </li>
+                            <li class="list-group-item">
+                                <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="Bowler2" id="Bowler2">
+                                <label class="form-check-label" for="Bowler2">Bowler2</label>
+                            </li>
+                        </ul>
+                        <p>Choose your next bowler.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scoreboard Section -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Runs</h5>
+                    <p class="card-text" id="runs">{{ total_runs }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Wickets</h5>
+                    <p class="card-text" id="wickets">{{ total_wickets }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Overs Bowled</h5>
+                    <p class="card-text" id="overs">{{ total_overs }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Run Selection and Confirmation Section -->
+<div class="row mt-3">
+    <div class="col-md-8">
+        <form method="post" action="/add_runs">
+            <!-- Runs Dropdown -->
+            <div class="mb-2">
+                <label for="runsSelect" class="form-label">Select Runs</label>
+                <select class="form-select" id="runsSelect" name="runs" required>
+                    <option value="0">None</option>
+                    <option value="1">1 Run</option>
+                    <option value="2">2 Runs</option>
+                    <option value="3">3 Runs</option>
+                    <option value="4">4 Runs</option>
+                    <option value="6">6 Runs</option>
+                </select>
+            </div>
+
+            <!-- Special Deliveries Dropdown -->
+            <div class="mb-2">
+                <label for="specialDeliveriesSelect" class="form-label">Special Deliveries</label>
+                <select class="form-select" id="specialDeliveriesSelect" name="delivery_type" required>
+                    <option value="no_run">None</option>
+                    <option value="wide">Wide Ball</option>
+                    <option value="no_ball">No Ball</option>
+                    <option value="no_run">No Run</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-outline-success mt-2">Confirm</button>
+        </form>
+    </div>
+</div>
+
+    <!-- Wicket Button -->
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <form method="post" action="/add_wicket">
+                <button type="submit" class="btn btn-outline-danger">Add Wicket</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Undo Button -->
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <form method="post" action="/undo">
+                <button type="button" class="btn btn-outline-warning">Undo Last Action</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Additional Stats Section -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Current Run Rate</h5>
+                    <p class="card-text" id="current-run-rate">{{ current_run_rate }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Required Run Rate</h5>
+                    <p class="card-text" id="required-run-rate">0.00</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Inning</h5>
+                    <p class="card-text" id="inning">{{ inning }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
