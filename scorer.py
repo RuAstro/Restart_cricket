@@ -221,6 +221,6 @@ if __name__ == "__main__":
     # initialize the app with the extension
     with app.app_context():
         db.init_app(app)
-    db.create_all()
-    check_database()
+        db.create_all()
+        check_database()
     app.run(debug=True)
