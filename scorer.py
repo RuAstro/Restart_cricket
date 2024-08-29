@@ -31,19 +31,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
-batsman1 = BatsmanData("batsman1")
-batsman2 = BatsmanData("batsman2")
-bowler = BowlerData("bowler1")
-total_runs: int = 0
-total_overs: float = 0
-balls_faced = 0
-total_wickets = 0
-previous_state = None
-
-# Values to reset after each ball
-current_ball = BallData(bowler=bowler.name, batsman=batsman1.name)
-
-
 @app.route("/set_bowler", methods=["POST"])
 def set_bowler():
     name = request.form.get("name")
@@ -133,7 +120,7 @@ def index():
 
 # Route to handle adding runs
 @app.route("/add_runs", methods=["POST"])
-def add_runs(current_ball=current_ball):
+def add_runs():
     # Set current ball parameters based on request
     current_ball.runs = int(request.form.get("runs", 0))
     delivery_type = request.form.get("delivery_type", "normal")
@@ -149,7 +136,7 @@ def add_runs(current_ball=current_ball):
 
 # Route to handle adding wickets
 @app.route("/add_wicket", methods=["POST"])
-def add_wicket(current_ball=current_ball):
+def add_wicket():
 
     # Create a new ball record with wicket taken
     current_ball.wicket_taken = True
@@ -159,7 +146,7 @@ def add_wicket(current_ball=current_ball):
 
 # Route to handle for next ball
 @app.route("/next_ball", methods=["POST"])
-def next_ball(current_ball=current_ball):
+def next_ball():
     delivery_type = request.form.get("delivery_type", "normal")
     runs = current_ball.runs
 
@@ -218,9 +205,22 @@ def undo():
 
 
 if __name__ == "__main__":
-    # initialize the app with the extension
     with app.app_context():
         db.init_app(app)
         db.create_all()
         check_database()
-    app.run(debug=True)
+
+        batsman1 = Batsman.query.filter_by(name="batsman1").first()
+        batsman2 = Batsman.query.filter_by(name="batsman2").first()
+        bowler = Bowler.query.filter_by(name="bowler1").first()
+
+        total_runs = 0
+        total_overs = 0
+        balls_faced = 0
+        total_wickets = 0
+
+        # Values to reset after each ball
+        if batsman1 and bowler:
+            current_ball = BallData(bowler=bowler.name, batsman=batsman1.name)
+
+        app.run(debug=True)
