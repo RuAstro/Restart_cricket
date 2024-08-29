@@ -210,9 +210,10 @@ if __name__ == "__main__":
         db.create_all()
         check_database()
 
-        batsman1 = Batsman.query.filter_by(name="batsman1").first()
-        batsman2 = Batsman.query.filter_by(name="batsman2").first()
-        bowler = Bowler.query.filter_by(name="bowler1").first()
+        # Fetch the first two Batsmen and get the second one
+        batsman1 = Batsman.query.order_by(Batsman.id).limit(2).offset(1).first()
+        batsman2 = Batsman.query.order_by(Batsman.id).limit(2).offset(2).first()
+        bowler = Bowler.query.order_by(Bowler.id).limit(0).offset(1).first()
 
         total_runs = 0
         total_overs = 0
