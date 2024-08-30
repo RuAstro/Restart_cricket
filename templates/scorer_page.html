@@ -39,6 +39,37 @@
         box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Example shadow */
     }
 </style>
+
+<script>
+    function showPrompt() {
+        let name = prompt("Enter bowler's name:");
+        if (name) {
+            fetch('/set_bowler', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({ name: name }),
+            }).then(response => {
+                if (response.ok) {
+                    location.reload(); // Reload page to fetch and display bowler data
+                } else {
+                    alert("Failed to save the bowler's name.");
+                }
+            });
+        }
+    }
+
+    window.onload = function() {
+        fetch('/get_bowler')
+            .then(response => response.json())
+            .then(data => {
+                if (!data.name) {
+                    showPrompt(); // Show prompt if no bowler's name is set
+                }
+            });
+    };
+</script>
 {% endblock %}
 
 {% block body %}
@@ -151,37 +182,37 @@
     </div>
 
     <!-- Run Selection and Confirmation Section -->
-<div class="row mt-3">
-    <div class="col-md-8">
-        <form method="post" action="/add_runs">
-            <!-- Runs Dropdown -->
-            <div class="mb-2">
-                <label for="runsSelect" class="form-label">Select Runs</label>
-                <select class="form-select" id="runsSelect" name="runs" required>
-                    <option value="0">None</option>
-                    <option value="1">1 Run</option>
-                    <option value="2">2 Runs</option>
-                    <option value="3">3 Runs</option>
-                    <option value="4">4 Runs</option>
-                    <option value="6">6 Runs</option>
-                </select>
-            </div>
+    <div class="row mt-3">
+        <div class="col-md-8">
+            <form method="post" action="/add_runs">
+                <!-- Runs Dropdown -->
+                <div class="mb-2">
+                    <label for="runsSelect" class="form-label">Select Runs</label>
+                    <select class="form-select" id="runsSelect" name="runs" required>
+                        <option value="0">None</option>
+                        <option value="1">1 Run</option>
+                        <option value="2">2 Runs</option>
+                        <option value="3">3 Runs</option>
+                        <option value="4">4 Runs</option>
+                        <option value="6">6 Runs</option>
+                    </select>
+                </div>
 
-            <!-- Special Deliveries Dropdown -->
-            <div class="mb-2">
-                <label for="specialDeliveriesSelect" class="form-label">Special Deliveries</label>
-                <select class="form-select" id="specialDeliveriesSelect" name="delivery_type" required>
-                    <option value="no_run">None</option>
-                    <option value="wide">Wide Ball</option>
-                    <option value="no_ball">No Ball</option>
-                    <option value="no_run">No Run</option>
-                </select>
-            </div>
+                <!-- Special Deliveries Dropdown -->
+                <div class="mb-2">
+                    <label for="specialDeliveriesSelect" class="form-label">Special Deliveries</label>
+                    <select class="form-select" id="specialDeliveriesSelect" name="delivery_type" required>
+                        <option value="no_run">None</option>
+                        <option value="wide">Wide Ball</option>
+                        <option value="no_ball">No Ball</option>
+                        <option value="no_run">No Run</option>
+                    </select>
+                </div>
 
-            <button type="submit" class="btn btn-outline-success mt-2">Confirm</button>
-        </form>
+                <button type="submit" class="btn btn-outline-success mt-2">Confirm</button>
+            </form>
+        </div>
     </div>
-</div>
 
     <!-- Wicket Button -->
     <div class="row mt-3">

@@ -3,10 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
+class Batsman(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False, unique=True)
+
+
 class Bowler(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    runs_conceded = db.Column(db.Integer, default=0)
+    name = db.Column(db.String(100), unique=True, nullable=False)
 
 
 class Balls(db.Model):

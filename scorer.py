@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from models import db, Balls, Bowler
+from models import db, Balls, Bowler, Batsman
 from cricket_objects import BowlerData, BatsmanData, BallData
 from cricket_calculation import (
     calculate_strike_rate,
@@ -8,6 +8,7 @@ from cricket_calculation import (
 )
 import logging
 import os
+from checks import check_database
 
 
 logging.basicConfig(
@@ -218,7 +219,8 @@ def undo():
 
 if __name__ == "__main__":
     # initialize the app with the extension
-    db.init_app(app)
     with app.app_context():
+        db.init_app(app)
         db.create_all()
+        check_database()
     app.run(debug=True)
