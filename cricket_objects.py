@@ -11,6 +11,7 @@ class BallData:
     wide: bool = False
     no_ball: bool = False
     wicket_taken: bool = False
+    balls_in_over: int = 0
 
     def reset(self):
         """Reset ball data for the next delivery."""
@@ -20,6 +21,7 @@ class BallData:
         self.wide = False
         self.no_ball = False
         self.wicket_taken = False
+        self.balls_in_over = 0
 
 
 @dataclass
