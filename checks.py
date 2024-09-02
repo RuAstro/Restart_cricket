@@ -27,7 +27,7 @@ def populate_batsmen():
 
 def populate_bowlers():
     # Add default bowlers if none exist
-    default_bowlers = [f"bowler{x}" for x in range(5)]
+    default_bowlers = ["Morkel", "Philander", "Gale", "Rabada", "Panda"]
     existing_bowlers = {b.name for b in Bowler.query.all()}
 
     for name in default_bowlers:

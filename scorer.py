@@ -43,7 +43,7 @@ def set_bowler():
             db.session.add(bowler)
         db.session.commit()
         return redirect(url_for("index"))
-    return "Invalid name", 400
+    return redirect(url_for("index", error="Invalid name"))
 
 
 # Fetch bowler data
@@ -84,8 +84,6 @@ def index():
     bowler_data = Balls.query.filter(Balls.bowler == bowler.name).all()
 
     bowler_runs = sum(ball.runs for ball in bowler_data)
-    bowler_runs = len(bowler_data)
-
     bowler_balls = len(bowler_data)
 
     # Render the template with all the required variables
@@ -109,11 +107,9 @@ def index():
         total_runs=total_runs,
         total_wickets=total_wickets,
         total_overs=total_overs,
-        #    bowler=bowler,
         current_batsman=current_batsman,
         calculate_strike_rate=calculate_strike_rate,
         calculate_current_run_rate=calculate_current_run_rate,
-        # calculate_required_run_rate=calculate_required_run_rate,
         is_inning_over=is_inning_over,
     )
 
@@ -131,7 +127,7 @@ def add_runs():
     current_ball.no_ball = delivery_type == "no_ball"
     current_ball.wide = delivery_type == "wide"
 
-    return next_ball(current_ball)
+    return process_next_ball(current_ball, delivery_type)
 
 
 # Route to handle adding wickets
@@ -148,6 +144,10 @@ def add_wicket():
 @app.route("/next_ball", methods=["POST"])
 def next_ball():
     delivery_type = request.form.get("delivery_type", "normal")
+    return process_next_ball(current_ball, delivery_type)
+
+
+def process_next_ball(current_ball, delivery_type):
     runs = current_ball.runs
 
     # Determine additional runs based on delivery type
@@ -211,9 +211,9 @@ if __name__ == "__main__":
         check_database()
 
         # Fetch the first two Batsmen and get the second one
-        batsman1 = Batsman.query.order_by(Batsman.id).limit(1).offset(0).first()
+        batsman1 = Batsman.query.first()
         batsman2 = Batsman.query.order_by(Batsman.id).limit(1).offset(1).first()
-        bowler = Bowler.query.order_by(Bowler.id).limit(0).offset(0).first()
+        bowler = Bowler.query.first()
 
         total_runs = 0
         total_overs = 0
