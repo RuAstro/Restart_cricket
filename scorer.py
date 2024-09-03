@@ -86,6 +86,8 @@ def index():
     bowler_runs = sum(ball.runs for ball in bowler_data)
     bowler_balls = len(bowler_data)
 
+    inning = "First Inning" if total_runs < 100 else "Second Inning"
+
     # Render the template with all the required variables
     return render_template(
         "scorer_page.html",
@@ -112,7 +114,8 @@ def index():
         current_batsman=current_batsman,
         calculate_strike_rate=calculate_strike_rate,
         calculate_current_run_rate=calculate_current_run_rate,
-        is_inning_over=is_inning_over,
+        is_inning_ove=is_inning_over,
+        inning=inning,
     )
 
 
@@ -223,6 +226,7 @@ if __name__ == "__main__":
         total_overs = 0
         balls_faced = 0
         total_wickets = 0
+        is_inning_over = False
 
         # Values to reset after each ball
         if batsman1 and bowler:
