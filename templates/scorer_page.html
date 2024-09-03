@@ -133,16 +133,17 @@
                 </div>
                 <div class="modal-body">
                     <ul class="list-group">
+                        {% for bowler in bowlers %}
                         <li class="list-group-item">
-                            <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="Bowler1" id="Bowler1">
-                            <label class="form-check-label" for="Bowler1">{{ bowlers }}</label>
-                        </li>
-                    </ul>
+                            <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="firstRadio" checked>
+                            <label class="form-check-label" for="firstRadio">{{bowler}}</label>
+                          </li>
+                        {% endfor %}
+                        </ul>
                     <p>Choose your next bowler.</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveChangesButton">Save changes</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
         </div>
@@ -230,7 +231,6 @@
                 <div class="modal-body">
                     <!-- Form for selecting a batsman -->
                     <form id="batsmanForm" method="post" action="/add_wicket">
-                            <div class="dropdown">
                                 <ul class="list-group">
                                 {% for batsman in batsmen %}
                                 <li class="list-group-item">
