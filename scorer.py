@@ -142,9 +142,22 @@ def add_runs():
 # Route to handle adding wickets
 @app.route("/add_wicket", methods=["POST"])
 def add_wicket():
+    # Get the selected batsman from the form
+    batsman = request.form.get("batsman")
 
-    # Create a new ball record with wicket taken
-    current_ball.wicket_taken = True
+    if batsman:
+        current_ball.wicket_taken = True
+
+        batsman1 = Batsman.query.filter_by(name=batsman).first()
+        if batsman1:
+            if current_ball.batsman == batsman1.name:
+                if batsman2:
+                    current_ball.batsman = batsman2.name
+            else:
+                current_ball.batsman = batsman1.name
+
+        db.session.add(current_ball)
+        db.session.commit()
 
     return redirect(url_for("index"))
 

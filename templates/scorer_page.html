@@ -231,16 +231,15 @@
                 <div class="modal-body">
                     <!-- Form for selecting a batsman -->
                     <form id="batsmanForm" method="post" action="/add_wicket">
-                                <ul class="list-group">
-                                {% for batsman in batsmen %}
-                                <li class="list-group-item">
-                                    <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="firstRadio" checked>
-                                    <label class="form-check-label" for="firstRadio">{{batsman}}</label>
-                                  </li>
-                                {% endfor %}
-                                </ul>
-                              </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                        <ul class="list-group">
+                            {% for batsman in batsmen %}
+                            <li class="list-group-item">
+                                <input class="form-check-input me-1" type="radio" name="batsman" value="{{ batsman }}" id="{{ batsman }}">
+                                <label class="form-check-label" for="{{ batsman }}">{{ batsman }}</label>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <button type="submit" class="btn btn-primary mt-3">Submit</button>
                     </form>
                 </div>
             </div>
