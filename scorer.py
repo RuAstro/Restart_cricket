@@ -192,23 +192,6 @@ def process_next_ball(current_ball, delivery_type):
     return redirect(url_for("index"))
 
 
-# Route to handle undo button
-@app.route("/undo", methods=["POST"])
-def undo():
-    if previous_state:
-        batsman1 = previous_state["batsman1"]
-        batsman2 = previous_state["batsman2"]
-        bowler_name = previous_state["bowler_name"]
-        total_runs = previous_state["total_runs"]
-        total_wickets = previous_state["total_wickets"]
-        total_overs = previous_state["total_overs"]
-
-        # Clear previous state after undoing
-        previous_state = None
-
-    return redirect(url_for("index"))
-
-
 if __name__ == "__main__":
     with app.app_context():
         db.init_app(app)
