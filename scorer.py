@@ -64,6 +64,9 @@ def index():
     total_balls = Balls.query.count()
     total_overs = (total_balls // 6) + (total_balls % 6) / 10
 
+    # Calculate current run rate
+    current_run_rate = total_runs / total_overs if total_overs > 0 else 0
+
     # Fetch batsman details
     batsman1_data = Balls.query.filter(Balls.batsman == batsman1.name).all()
     batsman2_data = Balls.query.filter(Balls.batsman == batsman2.name).all()
@@ -112,6 +115,7 @@ def index():
         total_wickets=total_wickets,
         total_overs=total_overs,
         current_batsman=current_batsman,
+        current_run_rate=current_run_rate,
         calculate_strike_rate=calculate_strike_rate,
         calculate_current_run_rate=calculate_current_run_rate,
         is_inning_ove=is_inning_over,
