@@ -104,6 +104,8 @@ def index():
             "runs": bowler_runs,
             "balls": bowler_balls,
         },
+        batsmen=batsmen,
+        bowlers=bowlers,
         total_runs=total_runs,
         total_wickets=total_wickets,
         total_overs=total_overs,

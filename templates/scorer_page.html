@@ -230,12 +230,17 @@
                 <div class="modal-body">
                     <!-- Form for selecting a batsman -->
                     <form id="batsmanForm" method="post" action="/add_wicket">
-                        <div class="mb-3">
-                            <label for="new_batsman" class="form-label">New Batsman</label>
-                            <select class="form-select" id="new_batsman" name="new_batsman" required>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                            <div class="dropdown">
+                                <ul class="list-group">
+                                {% for batsman in batsmen %}
+                                <li class="list-group-item">
+                                    <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="firstRadio" checked>
+                                    <label class="form-check-label" for="firstRadio">{{batsman}}</label>
+                                  </li>
+                                {% endfor %}
+                                </ul>
+                              </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
             </div>
@@ -273,7 +278,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Inning</h5>
-                    <p class="card-text" id="inning">{{ inning }}</p>
+                    <p class="card-text" id="inning">{{ is_inning_over }}</p>
                 </div>
             </div>
         </div>
