@@ -3,7 +3,19 @@ from models import db, Balls, Bowler, Batsman
 
 def populate_batsmen():
     # Add default batsmen if none exist
-    default_batsmen = [f"batsman{x}" for x in range(11)]
+    default_batsmen = [
+        "Joe",
+        "John",
+        "RJ",
+        "Jacob",
+        "Frans",
+        "Pieter",
+        "Ox",
+        "Malcolm",
+        "Kolbe",
+        "Markram",
+        "Victor",
+    ]
     existing_batsmen = {b.name for b in Batsman.query.all()}
 
     for name in default_batsmen:
@@ -15,7 +27,7 @@ def populate_batsmen():
 
 def populate_bowlers():
     # Add default bowlers if none exist
-    default_bowlers = [f"bowler{x}" for x in range(5)]
+    default_bowlers = ["Morkel", "Philander", "Gale", "Rabada", "Panda"]
     existing_bowlers = {b.name for b in Bowler.query.all()}
 
     for name in default_bowlers:

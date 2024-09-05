@@ -52,7 +52,7 @@
                 body: new URLSearchParams({ name: name }),
             }).then(response => {
                 if (response.ok) {
-                    location.reload(); // Reload page to fetch and display bowler data
+                    location.reload();
                 } else {
                     alert("Failed to save the bowler's name.");
                 }
@@ -65,7 +65,7 @@
             .then(response => response.json())
             .then(data => {
                 if (!data.name) {
-                    showPrompt(); // Show prompt if no bowler's name is set
+                    showPrompt();
                 }
             });
     };
@@ -123,31 +123,26 @@
                 </div>
             </div>
         </div>
-        <!-- Modal -->
-        <div class="modal fade" id="selectNextBowlerModal" tabindex="-1" aria-labelledby="selectNextBowlerModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="selectNextBowlerModalLabel">Select Next Bowler</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="Bowler1" id="Bowler1">
-                                <label class="form-check-label" for="Bowler1">Bowler1</label>
-                            </li>
-                            <li class="list-group-item">
-                                <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="Bowler2" id="Bowler2">
-                                <label class="form-check-label" for="Bowler2">Bowler2</label>
-                            </li>
-                        </ul>
-                        <p>Choose your next bowler.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
+         <!-- Modal -->
+    <div class="modal fade" id="selectNextBowlerModal" tabindex="-1" aria-labelledby="selectNextBowlerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="selectNextBowlerModalLabel">Select Next Bowler</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="Bowler1" id="Bowler1">
+                            <label class="form-check-label" for="Bowler1">{{ bowlers }}</label>
+                        </li>
+                    </ul>
+                    <p>Choose your next bowler.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveChangesButton">Save changes</button>
                 </div>
             </div>
         </div>

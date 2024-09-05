@@ -31,19 +31,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
-batsman1 = BatsmanData("batsman1")
-batsman2 = BatsmanData("batsman2")
-bowler = BowlerData("bowler1")
-total_runs: int = 0
-total_overs: float = 0
-balls_faced = 0
-total_wickets = 0
-previous_state = None
-
-# Values to reset after each ball
-current_ball = BallData(bowler=bowler.name, batsman=batsman1.name)
-
-
 @app.route("/set_bowler", methods=["POST"])
 def set_bowler():
     name = request.form.get("name")
@@ -56,7 +43,7 @@ def set_bowler():
             db.session.add(bowler)
         db.session.commit()
         return redirect(url_for("index"))
-    return "Invalid name", 400
+    return redirect(url_for("index", error="Invalid name"))
 
 
 # Fetch bowler data
@@ -97,8 +84,6 @@ def index():
     bowler_data = Balls.query.filter(Balls.bowler == bowler.name).all()
 
     bowler_runs = sum(ball.runs for ball in bowler_data)
-    bowler_runs = len(bowler_data)
-
     bowler_balls = len(bowler_data)
 
     # Render the template with all the required variables
@@ -122,18 +107,16 @@ def index():
         total_runs=total_runs,
         total_wickets=total_wickets,
         total_overs=total_overs,
-        #    bowler=bowler,
         current_batsman=current_batsman,
         calculate_strike_rate=calculate_strike_rate,
         calculate_current_run_rate=calculate_current_run_rate,
-        # calculate_required_run_rate=calculate_required_run_rate,
         is_inning_over=is_inning_over,
     )
 
 
 # Route to handle adding runs
 @app.route("/add_runs", methods=["POST"])
-def add_runs(current_ball=current_ball):
+def add_runs():
     # Set current ball parameters based on request
     current_ball.runs = int(request.form.get("runs", 0))
     delivery_type = request.form.get("delivery_type", "normal")
@@ -144,12 +127,12 @@ def add_runs(current_ball=current_ball):
     current_ball.no_ball = delivery_type == "no_ball"
     current_ball.wide = delivery_type == "wide"
 
-    return next_ball(current_ball)
+    return process_next_ball(current_ball, delivery_type)
 
 
 # Route to handle adding wickets
 @app.route("/add_wicket", methods=["POST"])
-def add_wicket(current_ball=current_ball):
+def add_wicket():
 
     # Create a new ball record with wicket taken
     current_ball.wicket_taken = True
@@ -159,8 +142,12 @@ def add_wicket(current_ball=current_ball):
 
 # Route to handle for next ball
 @app.route("/next_ball", methods=["POST"])
-def next_ball(current_ball=current_ball):
+def next_ball():
     delivery_type = request.form.get("delivery_type", "normal")
+    return process_next_ball(current_ball, delivery_type)
+
+
+def process_next_ball(current_ball, delivery_type):
     runs = current_ball.runs
 
     # Determine additional runs based on delivery type
@@ -218,9 +205,25 @@ def undo():
 
 
 if __name__ == "__main__":
-    # initialize the app with the extension
     with app.app_context():
         db.init_app(app)
         db.create_all()
         check_database()
-    app.run(debug=True)
+
+        # Fetch the first two Batsman
+        batsman1 = Batsman.query.order_by(Batsman.id).limit(1).offset(0).first()
+        batsman2 = Batsman.query.order_by(Batsman.id).limit(1).offset(1).first()
+        bowler = Bowler.query.first()
+        bowlers = [x.name for x in Bowler.query.all()]
+        batsmen = [x.name for x in Batsman.query.all()]
+
+        total_runs = 0
+        total_overs = 0
+        balls_faced = 0
+        total_wickets = 0
+
+        # Values to reset after each ball
+        if batsman1 and bowler:
+            current_ball = BallData(bowler=bowler.name, batsman=batsman1.name)
+
+        app.run(debug=True)
