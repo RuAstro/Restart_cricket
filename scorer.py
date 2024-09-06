@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from models import db, Balls, Bowler, Batsman
-from cricket_objects import BowlerData, BatsmanData, BallData
+from cricket_objects import BallData
 from cricket_calculation import (
     calculate_strike_rate,
     calculate_current_run_rate,
@@ -39,6 +39,7 @@ def set_bowler():
         if bowler:
             bowler.name = name
         else:
+            # TODOL: Check if this actualy works.
             bowler = Bowler(name=name)
             db.session.add(bowler)
         db.session.commit()
@@ -64,6 +65,9 @@ def index():
     total_balls = Balls.query.count()
     total_overs = (total_balls // 6) + (total_balls % 6) / 10
 
+    # Calculate current run rate
+    current_run_rate = total_runs / total_overs if total_overs > 0 else 0
+
     # Fetch batsman details
     batsman1_data = Balls.query.filter(Balls.batsman == batsman1.name).all()
     batsman2_data = Balls.query.filter(Balls.batsman == batsman2.name).all()
@@ -86,6 +90,8 @@ def index():
     bowler_runs = sum(ball.runs for ball in bowler_data)
     bowler_balls = len(bowler_data)
 
+    inning = "First Inning" if total_runs < 100 else "Second Inning"
+
     # Render the template with all the required variables
     return render_template(
         "scorer_page.html",
@@ -104,13 +110,17 @@ def index():
             "runs": bowler_runs,
             "balls": bowler_balls,
         },
+        batsmen=batsmen,
+        bowlers=bowlers,
         total_runs=total_runs,
         total_wickets=total_wickets,
         total_overs=total_overs,
         current_batsman=current_batsman,
+        current_run_rate=current_run_rate,
         calculate_strike_rate=calculate_strike_rate,
         calculate_current_run_rate=calculate_current_run_rate,
-        is_inning_over=is_inning_over,
+        is_inning_ove=is_inning_over,
+        inning=inning,
     )
 
 
@@ -133,9 +143,22 @@ def add_runs():
 # Route to handle adding wickets
 @app.route("/add_wicket", methods=["POST"])
 def add_wicket():
+    # Get the selected batsman from the form
+    batsman = request.form.get("batsman")
 
-    # Create a new ball record with wicket taken
-    current_ball.wicket_taken = True
+    if batsman:
+        current_ball.wicket_taken = True
+
+        batsman1 = Batsman.query.filter_by(name=batsman).first()
+        if batsman1:
+            if current_ball.batsman == batsman1.name:
+                if batsman2:
+                    current_ball.batsman = batsman2.name
+            else:
+                current_ball.batsman = batsman1.name
+
+        db.session.add(current_ball)
+        db.session.commit()
 
     return redirect(url_for("index"))
 
@@ -187,23 +210,6 @@ def process_next_ball(current_ball, delivery_type):
     return redirect(url_for("index"))
 
 
-# Route to handle undo button
-@app.route("/undo", methods=["POST"])
-def undo():
-    if previous_state:
-        batsman1 = previous_state["batsman1"]
-        batsman2 = previous_state["batsman2"]
-        bowler_name = previous_state["bowler_name"]
-        total_runs = previous_state["total_runs"]
-        total_wickets = previous_state["total_wickets"]
-        total_overs = previous_state["total_overs"]
-
-        # Clear previous state after undoing
-        previous_state = None
-
-    return redirect(url_for("index"))
-
-
 if __name__ == "__main__":
     with app.app_context():
         db.init_app(app)
@@ -221,6 +227,7 @@ if __name__ == "__main__":
         total_overs = 0
         balls_faced = 0
         total_wickets = 0
+        is_inning_over = False
 
         # Values to reset after each ball
         if batsman1 and bowler:

@@ -37,6 +37,3 @@ class BowlerData:
     runs_conceded: int = 0
     overs_bowled: float = 0.0
     wickets_taken: int = 0
-
-    def total_cost(self) -> float:
-        return self.unit_price * self.quantity_on_hand

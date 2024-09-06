@@ -133,16 +133,17 @@
                 </div>
                 <div class="modal-body">
                     <ul class="list-group">
+                        {% for bowler in bowlers %}
                         <li class="list-group-item">
-                            <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="Bowler1" id="Bowler1">
-                            <label class="form-check-label" for="Bowler1">{{ bowlers }}</label>
-                        </li>
-                    </ul>
+                            <input class="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="firstRadio" checked>
+                            <label class="form-check-label" for="firstRadio">{{bowler}}</label>
+                          </li>
+                        {% endfor %}
+                        </ul>
                     <p>Choose your next bowler.</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveChangesButton">Save changes</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
         </div>
@@ -212,18 +213,36 @@
     <!-- Wicket Button -->
     <div class="row mt-3">
         <div class="col-md-12">
-            <form method="post" action="/add_wicket">
-                <button type="submit" class="btn btn-outline-danger">Add Wicket</button>
-            </form>
+            <!-- Button to trigger modal -->
+            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#batsmanModal">
+                Add Wicket
+            </button>
         </div>
     </div>
 
-    <!-- Undo Button -->
-    <div class="row mt-3">
-        <div class="col-md-12">
-            <form method="post" action="/undo">
-                <button type="button" class="btn btn-outline-warning">Undo Last Action</button>
-            </form>
+    <!-- Batsman Modal -->
+    <div class="modal fade" id="batsmanModal" tabindex="-1" aria-labelledby="batsmanModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="batsmanModalLabel">Select New Batsman</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form for selecting a batsman -->
+                    <form id="batsmanForm" method="post" action="/add_wicket">
+                        <ul class="list-group">
+                            {% for batsman in batsmen %}
+                            <li class="list-group-item">
+                                <input class="form-check-input me-1" type="radio" name="batsman" value="{{ batsman }}" id="{{ batsman }}">
+                                <label class="form-check-label" for="{{ batsman }}">{{ batsman }}</label>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -233,7 +252,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Current Run Rate</h5>
-                    <p class="card-text" id="current-run-rate">{{ current_run_rate }}</p>
+                    <p class="card-text" id="current-run-rate">{{ current_run_rate | round(2) }}</p>
                 </div>
             </div>
         </div>
