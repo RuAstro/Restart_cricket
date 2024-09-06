@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from models import db, Balls, Bowler, Batsman
-from cricket_objects import BowlerData, BatsmanData, BallData
+from cricket_objects import BallData
 from cricket_calculation import (
     calculate_strike_rate,
     calculate_current_run_rate,
@@ -39,6 +39,7 @@ def set_bowler():
         if bowler:
             bowler.name = name
         else:
+            # TODOL: Check if this actualy works.
             bowler = Bowler(name=name)
             db.session.add(bowler)
         db.session.commit()

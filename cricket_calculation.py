@@ -17,7 +17,7 @@ def calculate_strike_rate(runs, balls):
     return (runs / balls) * 100
 
 
-def calculate_current_run_rate(balls, total_runs, total_overs):
+def calculate_current_run_rate(total_runs, total_overs):
     """
     Calculate the current run rate of a cricket match based on total runs and overs.
 
@@ -25,7 +25,6 @@ def calculate_current_run_rate(balls, total_runs, total_overs):
     total_runs / total_overs
 
     Args:
-        balls_faced (int): The number of balls bowled (not used in the calculation but included for completeness).
         total_runs (int): The total number of runs scored by the team.
         total_overs (int): The total number of overs bowled.
 
